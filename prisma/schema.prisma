@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model attendence {
+  attendence_id Int      @id @default(autoincrement())
+  date          DateTime @db.Date
+  status        Boolean
+  remarks       String?  @db.Text
+  student_id    Int
+  student       student  @relation(fields: [student_id], references: [student_id], onUpdate: Restrict, map: "student_atten")
+
+  @@index([student_id], map: "student_atten")
+}
+
+/// This model has been renamed to 'Renamedclass' during introspection, because the original name 'class' is reserved.
+model Renamedclass {
+  class_id   Int       @id @default(autoincrement())
+  year       Int       @db.Year
+  grade_id   Int
+  section    String    @db.Char(2)
+  status     Boolean?
+  remarks    String?   @db.VarChar(45)
+  teacher_id Int
+  grade      grade     @relation("classTograde", fields: [grade_id], references: [grade_id], onUpdate: Restrict, map: "grade_class")
+  teacher    teacher   @relation("classToteacher", fields: [teacher_id], references: [teacher_id], onUpdate: Restrict, map: "teacher_class")
+  student    student[] @relation("classTostudent")
+
+  @@index([grade_id], map: "grade_class")
+  @@index([teacher_id], map: "teacher_class")
+  @@map("class")
+}
+
+model course {
+  course_id    Int           @id @default(autoincrement())
+  name         String        @db.VarChar(45)
+  c_desription String        @db.VarChar(45)
+  grade_id     Int
+  grade        grade         @relation(fields: [grade_id], references: [grade_id], onUpdate: Restrict, map: "course_ibfk_1")
+  exam_result  exam_result[]
+
+  @@index([grade_id], map: "grade_id")
+}
+
+model exam {
+  exam_id      Int           @id @default(autoincrement())
+  exam_type_id Int
+  name         String        @db.VarChar(45)
+  start_date   DateTime      @db.Date
+  exam_type    exam_type     @relation(fields: [exam_type_id], references: [exam_type_id], onUpdate: Restrict, map: "exam_type")
+  exam_result  exam_result[]
+
+  @@index([exam_type_id], map: "exam_type")
+}
+
+model exam_result {
+  exam_result_id Int     @id @default(autoincrement())
+  exam_id        Int
+  student_id     Int
+  course_id      Int
+  marks          String  @db.VarChar(45)
+  course         course  @relation(fields: [course_id], references: [course_id], onUpdate: Restrict, map: "course_marks")
+  exam           exam    @relation(fields: [exam_id], references: [exam_id], onUpdate: Restrict, map: "exam_det")
+  student        student @relation(fields: [student_id], references: [student_id], onUpdate: Restrict, map: "student_exam")
+
+  @@index([course_id], map: "course_marks")
+  @@index([exam_id], map: "exam_det")
+  @@index([student_id], map: "student_exam")
+}
+
+model exam_type {
+  exam_type_id Int    @id @default(autoincrement())
+  name         String @db.VarChar(45)
+  description  String @db.VarChar(45)
+  exam         exam[]
+}
+
+model grade {
+  grade_id   Int            @id @default(autoincrement())
+  name       String         @unique(map: "name") @db.VarChar(45)
+  descripton String         @db.VarChar(45)
+  class      Renamedclass[] @relation("classTograde")
+  course     course[]
+}
+
+model parent {
+  parent_id Int       @id @default(autoincrement())
+  name      String    @db.VarChar(45)
+  dob       DateTime  @db.Date
+  phone     String    @db.VarChar(15)
+  status    Boolean?
+  email     String    @db.VarChar(45)
+  password  String    @db.VarChar(45)
+  student   student[]
+}
+
+model student {
+  student_id  Int           @id @default(autoincrement())
+  name        String        @db.VarChar(45)
+  dob         DateTime      @db.Date
+  phone       String        @db.VarChar(15)
+  join_date   DateTime      @db.Date
+  status      Boolean?
+  email       String        @db.VarChar(45)
+  password    String        @db.VarChar(45)
+  parent_id   Int
+  class_id    Int
+  class       Renamedclass  @relation("classTostudent", fields: [class_id], references: [class_id], onUpdate: Restrict, map: "class_student")
+  parent      parent        @relation(fields: [parent_id], references: [parent_id], onUpdate: Restrict, map: "parent_student")
+  attendence  attendence[]
+  exam_result exam_result[]
+
+  @@index([class_id], map: "class_student")
+  @@index([parent_id], map: "parent_student")
+}
+
+model teacher {
+  teacher_id Int            @id @default(autoincrement())
+  name       String         @db.VarChar(45)
+  dob        DateTime       @db.Date
+  phone      String         @db.VarChar(15)
+  status     Boolean?
+  email      String         @db.VarChar(45)
+  password   String         @db.VarChar(45)
+  class      Renamedclass[] @relation("classToteacher")
+}
+
+model users {
+  u_id     Int    @id @default(autoincrement())
+  name     String @db.VarChar(45)
+  email    String @unique(map: "email") @db.VarChar(45)
+  passward String @db.VarChar(45)
+}
