@@ -1,0 +1,139 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+.h11
+{
+  text-align: center;
+  padding-top: 3ch;
+}
+.text1
+{
+  padding-bottom: 3ch;
+  size: 10px;
+  text-align: center;
+}
+.box
+{
+  margin: auto;
+  width: 50%;
+  border-radius: 4px;
+  align-self: center;
+  display: flex;
+  align-items: center;
+}
+.box .img
+{
+    width: 300px;
+    align-items: center;
+    padding-left: 10px;
+}
+.box .img img
+{
+    max-width: 100%;
+    align-items: center;
+    margin-left: 200px;
+}
+.box .pp{
+  padding-left: 20px;
+  padding-top: 10px;
+}
+.Head22{
+  padding: 30px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.1);
+  font-family: 'Poppins', sans-serif;
+}
+.Head2{
+  color:rgb(0, 140, 255);
+}
+.pp2{
+  font-weight: 800;
+}
+@media (max-width: 768px){
+  .box{
+    display: block;
+  }
+  .img{
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  .pp{
+    width: 100%;
+  }
+  .h11
+  {
+    font-size: larger;
+  }
+  .Head22{
+    width: 100%;
+    font-size: larger;
+  }
+  .pp22{
+    width: 100%;
+    font-size: small;
+  }
+  .img img{
+    width: 100%;
+    height: auto;
+  }
+}
+.packg
+{
+    text-align: left;
+    padding: 2%;
+}
+.wrap{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em; 
+}
+.card {
+  flex: 1 0 200px; 
+  overflow: hidden;
+  border-radius: var(--radius);
+  margin: 50px;
+  text-align: left;
+  flex-direction: column;
+  align-self: normal;
+  width: 40ch;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: transform 200ms ease-in;
+}
+@media (max-widt:225px) {
+  .h11{
+    font-size: 10px;
+  }
+  .price{
+    font-size: 5px;
+  }
+}
+
+/* .form-header {
+  margin: 0 0 0px;
+}
+.form-header h1 {
+  padding: 4px 0;
+  color: #4285f4;
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.form-group button {
+  outline: none;
+  background: #4285f4;
+  width: 100%;
+  border: 0;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 1ch;
+  margin-left: 1ch;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 500;
+  line-height: inherit;
+  text-transform: uppercase;
+  cursor: pointer;
+} */

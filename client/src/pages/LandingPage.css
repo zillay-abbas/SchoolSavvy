@@ -2,12 +2,17 @@
 
 .homecolor {
     background-color: #37C1CE;
-    height: 100% !important;
+    height: 90vh !important;
 }
 
 .px-8{
     padding-right: 4rem!important;
     padding-left: 4rem!important;
+}
+
+
+.imgBanner{ 
+    object-fit: c;
 }
 
 @media (max-width: 575px) {
@@ -100,19 +105,4 @@ section .section-title {
 }  
 #footer ul.quick-links li:hover a i {  
     font-weight: 700;  
-}  
-@media (max-width:767px) {  
-#footer h5 {  
-      padding-left: 0;  
-    border-left: transparent;  
-    padding-bottom: 0px;  
-    margin-bottom: 10px;  
-}  
-}
-
-h2 {  
-padding: 25px 0;  
-text-align: center;  
-color: #fff;  
-background: #7c8490;  
 }  

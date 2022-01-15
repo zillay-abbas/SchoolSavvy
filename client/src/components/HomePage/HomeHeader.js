@@ -27,19 +27,19 @@ const HomeHeader = () => {
           >
             <ul className="navbar-nav mx-auto">
               <li className="nav-item active mx-1">
-                <a className="nav-link text-center" href="/">
+                <a className="nav-link text-center" href="/features">
                   Features
                 </a>
               </li>
 
               <li className="nav-item mx-1">
-                <a className="nav-link text-center" href="/">
+                <a className="nav-link text-center" href="/pricing">
                   Pricing
                 </a>
               </li>
 
               <li className="nav-item mx-1">
-                <a className="nav-link text-center" href="/">
+                <a className="nav-link text-center" href="/contact">
                   Contact
                 </a>
               </li>

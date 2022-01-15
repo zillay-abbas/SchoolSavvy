@@ -80,7 +80,7 @@ body {
 .form-group:last-child {
   margin: 0;
 }
-.form-group label {
+.frm-clr .form-group label {
   display: block;
   margin: 0 0 10px;
   color: rgba(0, 0, 0, 0.6);

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server/index.js"
+    "start": "node backend/server.js",
+    "startNode": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -12,16 +13,22 @@
   "dependencies": {
     "@prisma/client": "^3.6.0",
     "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.1",
     "connect-flash": "^0.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "ejs": "^3.1.6",
     "express": "^4.17.2",
     "express-ejs-layouts": "^2.5.1",
     "express-session": "^1.17.2",
+    "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "passport": "^0.5.2",
+    "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0"
   },
   "devDependencies": {
-    "prisma": "^3.6.0"
+    "nodemon": "^2.0.15",
+    "prisma": "^3.8.0"
   }
 }

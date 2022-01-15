@@ -1,32 +1,41 @@
-import React from "react";
-import axios from "axios";
+import { result } from "lodash";
+import React, { useState } from "react";
+import axios from "../components/App/axios.js";
 
-import HomeFooter from "../components/HomeFooter";
-import HomeHeader from "../components/HomeHeader";
+import HomeFooter from "../components/HomePage/HomeFooter.js";
+import HomeHeader from "../components/HomePage/HomeHeader.js";
 
 import "./SignIn.css";
 
 const SignUp = () => {
+  const [username, setUsername] = useState();
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  const [cpassword, setCpassword] = useState();
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
+  const handleRegister = async (e) => {
+    e.preventDefault();
 
-  const updateValues = e => {
-    setUsername(e.target.value);
-  }
+    const credentials = {
+      name: username,
+      email: email,
+      password: password,
+      password2: cpassword,
+    };
 
-  
-  function addUser() {
     axios
-      .post(, {
-        title: "Hello World!",
-        body: "This is a new post.",
+      .post("admin/register", credentials)
+      .then((result) => {
+        if (result.data.errors.length > 0) {
+          alert(`then error ${result.data.errors[0].msg}`);
+        } else {
+          alert("User Added");
+        }
       })
-      .then((response) => {
-        setPost(response.data);
+      .catch((error) => {
+        alert(`err0r ${error}`);
       });
-  }
+  };
 
   return (
     <div className="frm-clr">
@@ -42,44 +51,47 @@ const SignUp = () => {
           <div className="form-content">
             <form>
               <div className="form-group">
-                <label for="username">Username</label>
+                <label htmlFor="username">Username</label>
                 <input
                   id="username"
                   type="text"
                   name="username"
                   required="required"
-                  onChange={}
+                  onChange={(e) => setUsername(e.target.value)}
                 />
               </div>
               <div className="form-group">
-                <label for="password">Password</label>
+                <label htmlFor="password">Password</label>
                 <input
                   id="password"
                   type="password"
                   name="password"
                   required="required"
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
               <div className="form-group">
-                <label for="cpassword">Confirm Password</label>
+                <label htmlFor="cpassword">Confirm Password</label>
                 <input
                   id="cpassword"
                   type="password"
                   name="cpassword"
                   required="required"
+                  onChange={(e) => setCpassword(e.target.value)}
                 />
               </div>
               <div className="form-group">
-                <label for="email">Email Address</label>
+                <label htmlFor="email">Email Address</label>
                 <input
                   id="email"
                   type="email"
                   name="email"
                   required="required"
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="form-group">
-                <button type="submit" onClick={addUser}>
+                <button type="submit" onClick={handleRegister}>
                   Register
                 </button>
               </div>
