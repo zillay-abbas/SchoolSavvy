@@ -23,7 +23,7 @@ exports.getDashboardDetails = async (req, res) => {
       absentStudents,
     });
   } catch (error) {
-    res.status(404).json({ msg: "Server Error" });
+    res.status(500).json({ msg: "Server Error" });
   }
 };
 
@@ -199,21 +199,93 @@ exports.addStudent = async (req, res) => {
       error: error,
     });
   } else {
+    const checkEmail = await Student.checkStudentEmail(email);
+
+    console.log(checkEmail);
+
+    if (!checkEmail) {
+      try {
+        let hashPassword = await bcrypt.hash(password, 10);
+        const student = {
+          name,
+          dob,
+          phone,
+          join_date,
+          email,
+          hashPassword,
+          class_id,
+          parent_id,
+        };
+        const result = await Student.addStudent(student);
+        res.status(200).json({
+          msg: "Student Added",
+          result,
+        });
+      } catch (error) {
+        console.log(`errror : ${error}`);
+
+        res.status(500).json({
+          error: "Server Error",
+        });
+      }
+    } else {
+      res.status(403).json({
+        msg: "User with this email alreay exists",
+      });
+    }
+
+  }
+};
+
+exports.getStudent = async (req, res) => {
+  const { id } = req.query.id;
+
+  if (!id) {
+    res.status(400).json({
+      msg: "Enter Student ID to Search",
+    });
+  } else {
+    try {
+      const student = await Student.getStudentbyId(id);
+
+      res.status(200).json({
+        Student: student,
+      });
+    } catch (error) {
+      res.status(500).json({
+        msg: "Server Error",
+      });
+    }
+  }
+};
+
+exports.addTeacher = async (req, res) => {
+  const { name, dob, phone, email, password } = req.body;
+
+  let error = [];
+  // Validation checking
+
+  if (!name || !dob || !phone || !email || !password) {
+    error.push({ msg: "Please fill in all fields" });
+  }
+
+  if (error.length > 0) {
+    res.status(400).json({
+      error: error,
+    });
+  } else {
     try {
       let hashPassword = await bcrypt.hash(password, 10);
-      const student = {
+      const teacher = {
         name,
         dob,
         phone,
-        join_date,
         email,
         hashPassword,
-        class_id,
-        parent_id,
       };
-      const result = await Student.addStudent(student);
+      const result = await Teacher.addTeacher(teacher);
       res.status(200).json({
-        msg: "Student Added",
+        msg: "Teacher Added",
         result,
       });
     } catch (error) {
@@ -226,21 +298,21 @@ exports.addStudent = async (req, res) => {
   }
 };
 
-exports.getStudent = async (req, res) => {
-  const { id } = req.body;
+exports.getTeacher = async (req, res) => {
+  const { id } = req.query.id;
+
   if (!id) {
     res.status(400).json({
-      msg: "Enter Student ID to Search",
+      msg: "Enter Teacher ID to Search",
     });
   } else {
     try {
-      const student = await Student.getStudent(id);
+      const teacher = await Teacher.getTeacherbyId(id);
 
       res.status(200).json({
-        Student: student
-      })
+        Teacher: teacher,
+      });
     } catch (error) {
-      
       res.status(500).json({
         msg: "Server Error",
       });

@@ -1,0 +1,64 @@
+/* body {
+  font-family: "Open Sans", sans-serif !important;
+  color: #373a3c !important; 
+  font-weight: 400 !important;
+  background: #4680ff !important;
+  position: relative !important;
+} */
+
+.m-header {
+  display: inline-flex;
+  width: 250px;
+  height: 50px;
+  align-items: center;
+  justify-content: space-between;
+  
+  padding: 0 25px;
+  /* position: relative; */
+  color: white !important;
+}
+
+.dash-cont {
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  color: #373a3c !important;
+  font-weight: 400;
+  position: relative;
+  height: 100vh;
+}
+
+.head-cont {
+  display: flex;
+  background: transparent;
+}
+
+.b-brand {
+  color: white !important;
+  text-decoration: none !important;
+  font-size: 20px !important;
+  font-weight: 500;
+}
+
+.mob-toggler {
+  color: white !important;
+  width: 30px !important;
+  height: 30px !important;
+}
+
+.hamburger-react {
+    color: white !important;
+    width: 30px !important;
+    height: 30px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.hamburger-react div {
+    color: white !important;
+    width: 20px !important;
+    height: 2px !important;
+    /* left: 0px !important; */
+    position: static !important;
+    /* top: 0px !important; */
+    margin-bottom: 5px !important;
+}

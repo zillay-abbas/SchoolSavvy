@@ -1,7 +1,8 @@
 import React from "react";
 import "./Features.css";
-import HomeFooter from "./HomeFooter";
-import HomeHeader from "./HomeHeader";
+
+import HomeFooter from "../Footer/HomeFooter";
+import HomeHeader from "../Header/HomeHeader";
 
 const Features = () => {
   return (

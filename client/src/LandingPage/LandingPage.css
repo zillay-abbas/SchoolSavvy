@@ -2,7 +2,7 @@
 
 .homecolor {
     background-color: #37C1CE;
-    height: 90vh !important;
+    min-height: 90vh !important;
 }
 
 .px-8{

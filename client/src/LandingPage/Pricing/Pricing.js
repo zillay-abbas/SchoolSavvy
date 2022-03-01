@@ -1,10 +1,12 @@
 import React from 'react'
-import './Pricing.css';
 
-import HomeFooter from "./HomeFooter";
-import HomeHeader from "./HomeHeader";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/fontawesome-free-solid';
+
+import HomeFooter from "../Footer/HomeFooter";
+import HomeHeader from "../Header/HomeHeader";
+
+import './Pricing.css';
 
 const Pricing = () => {
     return (

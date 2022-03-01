@@ -1,0 +1,148 @@
+.frm-clr {
+  background: #80d7f1;
+}
+.form {
+  z-index: 15;
+  position: relative;
+  background: #ffffff;
+  width: 28rem;
+  border-radius: 4px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  margin: 50px auto 50px;
+  overflow: hidden;
+}
+
+.form-recovery {
+  font-size: 15px;
+  text-decoration: none;
+}
+
+.form-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 0 0 10px;
+  align-items: center;
+}
+
+.remember-label {
+  margin: 0% !important;
+} 
+
+.remember-chk {
+  display: inline !important;
+  width: fit-content !important;
+  margin-right: 6px;
+}
+
+.frm-clr .form-group label {
+  display: block;
+  margin: 0 0 10px;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
+.form-group input {
+  outline: none;
+  display: block;
+  background: rgba(0, 0, 0, 0.1);
+  width: 100%;
+  border: 0;
+  border-radius: 4px;
+  box-sizing: border-box;
+  padding: 8px 15px;
+  color: rgba(0, 0, 0, 0.6);
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 500;
+  line-height: inherit;
+  transition: 0.3s ease;
+}
+
+.form-group button {
+  background: #4285f4;
+  width: 100%;
+  border: 0;
+  border-radius: 4px;
+  padding: 8px 15px;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 500;
+  line-height: inherit;
+  text-transform: uppercase;
+  text-decoration: none !important;
+  margin-top: .5em;
+}
+
+.form-panel {
+  padding: 30px 30px 30px 30px;
+  box-sizing: border-box;
+  /* width: 25rem; */
+}
+
+.form-header h1 {
+  padding: 4px 0;
+  color: #4285f4;
+  font-size: 24px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.px-8 {
+  padding-right: 4rem !important;
+  padding-left: 4rem !important;
+}
+
+@media (max-width: 767px) {
+  .form {
+    width: 400px;
+    margin: 40px auto 40px;
+  }
+  .form-header h1 {
+    font-size: 20px;
+    font-weight: 650;
+  }
+  .form-group input {
+    padding: 8px 8px;
+    font-weight: 500;
+    transition: 0.3s ease;
+}
+.form-group {
+  margin: 0 0 15px;
+}
+.form-group button {
+  padding: 8px 12px;
+  font-weight: 500;
+  margin-top: 1rem;
+}
+}
+
+@media (max-width: 575px) {
+  .form {
+    width: 350px;
+    margin: 30px auto 30px;
+  }
+  .form-panel {
+    padding: 40px 30px 30px 30px;
+  }
+  .form-panel.one {
+    width: 100%;
+    height: 100%;
+  }
+  .form-content {
+    margin: auto !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .form {
+    width: 290px;
+    margin: 25px auto 25px;
+  }
+}

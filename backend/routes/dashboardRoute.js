@@ -9,24 +9,20 @@ const {
   removeCourse,
   addStudent,
   getStudent,
+  addTeacher,
+  getTeacher,
 } = require("../controllers/dashboardCon");
 
 //Register handle
 
 router.route("/details").get(getDashboardDetails);
 
-router.route("/addGrade").post(addGrade);
+router.route("/grade").post(addGrade).delete(removeGrade);
 
-router.route("/removeGrade").post(removeGrade);
-
-router.route("/addCourse").post(addCourse);
-
-router.route("/removeCourse").post(removeCourse);
+router.route("/course").post(addCourse).delete(removeCourse);
 
 router.route("/student").post(addStudent).get(getStudent);
 
-router.route("/getTeacher").get();
-
-router.route("/getSubject").get();
+router.route("/teacher").post(addTeacher).get(getTeacher);
 
 module.exports = router;

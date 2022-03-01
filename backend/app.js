@@ -17,8 +17,10 @@ app.use(express.urlencoded({ extended: false}));
 
 app.use(passport.initialize());
 
-app.use("/admin", userRoute);
+app.use("v1/user", userRoute);
 
-app.use("/dashboard", passport.authenticate('jwt', { session: false }), dashboardRoute);
+app.use("v1/plan", userRoute);
+
+app.use("v1/user/dashboard", passport.authenticate('jwt', { session: false }), dashboardRoute);
 
 module.exports = app;

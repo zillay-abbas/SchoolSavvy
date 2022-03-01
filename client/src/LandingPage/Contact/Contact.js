@@ -1,7 +1,7 @@
 import React from "react";
 
-import HomeFooter from "./HomeFooter.js";
-import HomeHeader from "./HomeHeader.js";
+import HomeFooter from "../Footer/HomeFooter.js";
+import HomeHeader from "../Header/HomeHeader.js";
 
 const ContactusComponent = () => {
   return (
