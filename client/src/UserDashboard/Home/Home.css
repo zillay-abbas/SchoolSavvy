@@ -1,0 +1,11 @@
+.sch_summary {
+  display: flex;
+  justify-content: space-between;
+}
+
+@media only screen and (max-width: 740px) {
+  .sch_summary {
+    display: grid;
+    grid-template-columns: 100%;
+  }
+}

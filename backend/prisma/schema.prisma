@@ -167,7 +167,7 @@ model user {
   user_passward        String                 @db.VarChar(70)
   user_status          Int                    @db.TinyInt
   user_is_removed      Int                    @db.TinyInt
-  user_verification    String                 @db.VarChar(200)
+  user_verification    String                 @unique(map: "user_verification_UNIQUE") @db.VarChar(200)
   user_plan_id         Int?
   plan                 plan?                  @relation(fields: [user_plan_id], references: [plan_id], onDelete: NoAction, onUpdate: NoAction, map: "user_plan")
   user_package_payment user_package_payment[]

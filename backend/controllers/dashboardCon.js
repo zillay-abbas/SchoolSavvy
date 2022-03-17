@@ -2,7 +2,7 @@ const PrismaClient = require("@prisma/client");
 const prisma = new PrismaClient.PrismaClient();
 const bcrypt = require("bcrypt");
 
-const { Student, Parent, Teacher } = require("../models/userModel");
+const { Student, Parent, Teacher } = require("../models/adminModel");
 const { Course, Grade, Batch } = require("../models/subjectModel");
 
 exports.getDashboardDetails = async (req, res) => {

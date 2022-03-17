@@ -2,12 +2,10 @@ import React from "react";
 
 import "./Hamburger.css";
 
-const Hamburger = ({ toggled, isToggle }) => {
-  const toggle = () => {
-    isToggle(!toggled);
-  };
+const Hamburger = ({ toggled }) => {
+ 
   return (
-    <div onClick={toggle}>
+    <div >
       <div className="cont-ham" role="button" tabindex="0">
         <div className="ham-bar ham-first-bar"></div>
         <div className="ham-bar ham-sec-bar"></div>
@@ -16,24 +14,33 @@ const Hamburger = ({ toggled, isToggle }) => {
 
       <style jsx>{`
         .ham-first-bar {
-          top: 13px;
           transform: ${toggled
-            ? "rotate(45deg)"
+            ? "rotate(45deg) translate(0px, 5px)"
             : "none"};
         }
 
         .ham-sec-bar {
-          top: 23px;
-          opacity: ${toggled ? "0" : "1"};
+          display: ${toggled ? "none" : "block"};
+        }
+
+        .cont-ham {
+          display: flex;
+          flex-direction: column;
+          cursor: pointer;
+          height: ${toggled ? "9px" : "14px"};
+          width: 20px;
+          justify-content: space-between;
+          align-items: center;
+          transition: all 0.4s cubic-bezier(0, 0, 0, 1) 0s;
         }
 
         .ham-third-bar {
-          top: 33px;
           transform: ${toggled
-            ? "rotate(-45deg) "
+            ? "rotate(-45deg) translate(0px, -5px)"
             : "none"};
         }
       `}</style>
+
     </div>
   );
 };

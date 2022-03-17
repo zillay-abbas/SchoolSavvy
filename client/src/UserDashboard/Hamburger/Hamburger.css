@@ -1,19 +1,10 @@
-.cont-ham {
-  display: flex;
-  flex-direction: column;
-  cursor: pointer;
-  height: 30px;
-  transition: all 0.4s cubic-bezier(0, 0, 0, 1) 0s;
-  user-select: none;
-  justify-content: space-between;
-  width: 30px;
-  outline: none;
-}
 
 .ham-bar {
   background: white;
-  position: absolute;
   height: 2px;
-  width: 25px;
+  border-radius: 10px;
+  width: 18px;
   transition: all 0.4s cubic-bezier(0, 0, 0, 1) 0s;
 }
+
+

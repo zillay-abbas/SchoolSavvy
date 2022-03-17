@@ -3,6 +3,9 @@ const bcrypt = require("bcrypt");
 var validator = require("email-validator");
 var passwordValidator = require("password-validator");
 
+const sendEmail = require("../middlewares/eMail");
+const userConstant = require("../constant/userConstant");
+
 var schema = new passwordValidator();
 schema
   .is()
@@ -15,7 +18,7 @@ schema
   .not()
   .spaces();
 
-const { Admin, Student, Parent, Teacher } = require("../models/userModel");
+const { Admin, Student, Parent, Teacher } = require("../models/adminModel");
 
 exports.registerUser = async (req, res) => {
   // Get form request
@@ -23,20 +26,20 @@ exports.registerUser = async (req, res) => {
 
   // Validation checking
   if (!name || !email || !password || !password2) {
-    res.status(400).json({
+    res.status(200).json({
       error: true,
       msg: "Please fill all fields",
     });
   } else {
     //check if match
     if (password !== password2) {
-      res.status(400).json({
+      res.status(200).json({
         error: true,
         msg: "Password does not matches",
       });
     } else {
       if (!validator.validate(email) && !schema.validate(password)) {
-        res.status(422).json({
+        res.status(200).json({
           error: true,
           msg: "Input not correct",
         });
@@ -45,17 +48,54 @@ exports.registerUser = async (req, res) => {
           const user = await Admin.getUserbyEmail(email);
           // if same email already exists
           if (user) {
-            res.status(422).json({
+            res.status(200).json({
               error: true,
               msg: "User with this email already exists",
             });
           } else {
-            //hash password encrypt password
-            let hashPassword = await bcrypt.hash(password, 10);
-            const user = await Admin.addUser(name, email, hashPassword);
-            res.status(200).json(user);
+            const secret = "secret";
+            const status = (isRemoved = 0);
+
+            const token = jwt.sign({ email: email }, secret);
+
+            const mailVerification = await sendEmail(
+              name,
+              email,
+              "Account Verification",
+              "Click button to verify email",
+              token
+            );
+
+            console.log(mailVerification.rejected.length);
+
+            if (mailVerification.rejected.length == 0) {
+              //hash password encrypt password
+              let hashPassword = await bcrypt.hash(password, 10);
+
+              const user = await Admin.addUser(
+                name,
+                email,
+                hashPassword,
+                status,
+                isRemoved,
+                token
+              );
+
+              // if user added successfully
+              res.status(200).json({
+                error: false,
+                msg: "Account created. Check email to verify account",
+                user,
+              });
+            } else {
+              res.status(500).json({
+                error: true,
+                msg: "Server error",
+              });
+            }
           }
         } catch (error) {
+          console.log(error);
           res.status(500).json({
             error: true,
             msg: "Server error",
@@ -66,153 +106,194 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-exports.checkUser = async (req, res) => {
-  const { email, password, userType } = req.body;
-  let errors = [];
-  console.log(req.body);
+exports.verifyUser = async (req, res) => {
+  const token = req.params.code;
+
+  console.log(`token: ${token}`);
 
   // Validation checking
-  if (!email || !password || !userType) {
-    errors.push({ msg: "Please fill in all fields" });
-  }
-
-  // if error array contains any error
-  if (errors.length > 0) {
-    res.status(400).json({
-      errors: errors,
-      msg: "Please fill in all fields",
-      email: email,
-      password: password,
+  if (!token) {
+    res.status(401).json({
+      error: true,
+      msg: "Token not found",
     });
-    console.log(`respo: ${errors}`);
   } else {
-    //validation passed
+    try {
+      //validation passed
+      let user = await Admin.getAdminbyToken(token);
 
-    switch (userType) {
-      case "student":
-        // code block
-        let foundUser = await Student.getStudentbyEmail(email).catch((error) =>
-          res.status(500).json({ msg: "Server Error" })
-        );
+      console.log(user);
 
-        if (!foundUser) {
-          let storedPass = foundUser.passward;
-          let submittedPass = password;
+      console.log(`userid : ${user.user_id}`);
 
-          const passwordMatch = await bcrypt.compare(submittedPass, storedPass);
+      if (user) {
+        const status = 1;
+        const verifyUser = Admin.updateUserVerification(user.user_id, status);
 
-          if (passwordMatch) {
-            console.log(`user login ${foundUser}`);
-            // if same email already exists
-
-            let payload = { id: foundUser.id };
-            let token = jwt.sign(payload, "secret");
-            res.status(201).json({
-              msg: "Login Successfuly",
-              token: token,
-            });
-          } else {
-            res.status(401).json({ msg: "Invalid Password" });
-          }
-        } else {
-          res.status(401).json({ msg: "User Not Found" });
-        }
-
-        break;
-      case "admin":
-        // code block
-        let foundAdmin = await Admin.getUser(email).catch((error) =>
-          res.status(500).json({ msg: "Server Error" })
-        );
-        console.log(`fond: ${foundAdmin}`);
-
-        if (foundAdmin) {
-          let storedPass = foundAdmin.passward;
-          let submittedPass = password;
-
-          const passwordMatch = await bcrypt.compare(submittedPass, storedPass);
-
-          if (passwordMatch) {
-            console.log(`user login ${foundAdmin}`);
-            // if same email already exists
-
-            let payload = { id: foundAdmin.id };
-            let token = jwt.sign(payload, "secret");
-            res.status(201).json({
-              msg: "Login Successfuly",
-              token: token,
-            });
-          } else {
-            res.status(401).json({ msg: "Invalid Password" });
-          }
-        } else {
-          res.status(401).json({ msg: "User Not Found" });
-        }
-        break;
-      case "teacher":
-        let foundTeacher = await Teacher.getTeacherbyEmail(email).catch(
-          (error) => res.status(500).json({ msg: "Server Error" })
-        );
-        console.log(`found: ${foundTeacher}`);
-
-        if (!foundTeacher) {
-          let storedPass = foundTeacher.passward;
-          let submittedPass = password;
-
-          const passwordMatch = await bcrypt.compare(submittedPass, storedPass);
-
-          if (passwordMatch) {
-            console.log(`user login ${foundTeacher}`);
-            // if same email already exists
-
-            let payload = { id: foundTeacher.id };
-            let token = jwt.sign(payload, "secret");
-            res.status(201).json({
-              msg: "Login Successfuly",
-              token: token,
-            });
-          } else {
-            res.status(401).json({ msg: "Invalid Password" });
-          }
-        } else {
-          res.status(401).json({ msg: "User Not Found" });
-        }
-        break;
-      case "parent":
-        let foundParent = await Parent.getParentbyEmail(email).catch((error) =>
-          res.status(500).json({ msg: "Server Error " + error })
-        );
-
-        console.log(`fond: ${foundParent}`);
-
-        if (!foundParent) {
-          let storedPass = foundParent.passward;
-          let submittedPass = password;
-
-          const passwordMatch = await bcrypt.compare(submittedPass, storedPass);
-
-          if (passwordMatch) {
-            console.log(`user login ${foundParent}`);
-            // if same email already exists
-
-            let payload = { id: foundParent.id };
-            let token = jwt.sign(payload, "secret");
-            res.status(201).json({
-              msg: "Login Successfuly",
-              token: token,
-            });
-          } else {
-            res.status(401).json({ msg: "Invalid Password" });
-          }
-        } else {
-          res.status(401).json({ msg: "User Not Found" });
-        }
-
-        break;
-      default:
-      // code block
+        res.status(401).json({
+          error: false,
+          msg: "Account Verified",
+          user: verifyUser,
+        });
+      } else {
+        res.status(401).json({
+          error: true,
+          msg: "Invalid token",
+        });
+      }
+    } catch (error) {
+      res.status(500).json({
+        error: true,
+        msg: "Server Error",
+      });
     }
   }
 };
 
-exports.logoutUser = async (req, res) => {};
+exports.checkUser = async (req, res) => {
+  const { email, password, userType } = req.body;
+
+  console.log(req.body);
+  // Validation checking
+  if (!email || !password || !userType) {
+    res.status(400).json({
+      error: true,
+      msg: "Please fill all fields",
+    });
+  } else {
+    let isUserExists = false;
+    let user, msg, token;
+    try {
+      switch (userType) {
+        case userConstant.STUDENT:
+          let foundUser = await Student.getStudentbyEmail(email);
+
+          if (foundUser) {
+            const passwordMatch = await bcrypt.compare(
+              password,
+              foundUser.student_password
+            );
+
+            if (passwordMatch) {
+              console.log(`user login ${foundUser}`);
+
+              let payload = { id: foundUser.id };
+              token = jwt.sign(payload, "secret");
+
+              isUserExists = true;
+              msg = "Login Successfuly";
+              user = foundUser;
+            } else {
+              msg = "Invalid Password";
+            }
+          } else {
+            msg = "User Not Found";
+          }
+
+          break;
+        case userConstant.ADMIN:
+          let foundAdmin = await Admin.getAdminbyEmail(email);
+
+          if (foundAdmin) {
+            const passwordMatch = await bcrypt.compare(
+              password,
+              foundAdmin.user_passward
+            );
+
+            if (passwordMatch) {
+              let payload = { id: foundAdmin.id };
+              token = jwt.sign(payload, "secret");
+
+              msg = "Login Successfuly";
+              user = foundAdmin;
+              isUserExists = true;
+            } else {
+              msg = "Invalid Password";
+            }
+          } else {
+            msg = "User Not Found";
+          }
+          break;
+        case userConstant.TEACHER:
+          let foundTeacher = await Teacher.getTeacherbyEmail(email);
+
+          if (foundTeacher) {
+
+            const passwordMatch = await bcrypt.compare(
+              password,
+              foundTeacher.teacher_password
+            );
+
+            if (passwordMatch) {
+              console.log(`user login ${foundTeacher}`);
+
+              let payload = { id: foundTeacher.id };
+              token = jwt.sign(payload, "secret");
+
+              isUserExists = true;
+              msg = "Login Successfuly";
+              user = foundTeacher;
+            } else {
+              msg = "Invalid Password";
+            }
+          } else {
+            msg = "User Not Found";
+          }
+          break;
+        case userConstant.PARENT:
+          let foundParent = await Parent.getParentbyEmail(email);
+
+          if (foundParent) {
+            const passwordMatch = await bcrypt.compare(
+              password,
+              foundParent.parent_password
+            );
+
+            if (passwordMatch) {
+              let payload = { id: foundParent.id };
+              token = jwt.sign(payload, "secret");
+
+              isUserExists = true;
+              msg = "Login Successfuly";
+              user = foundParent;
+            } else {
+              msg = "Invalid Password";
+            }
+          } else {
+            msg = "User Not Found";
+          }
+
+          break;
+        default:
+        // code block
+      }
+
+      if (isUserExists) {
+        res.status(201).json({
+          error: false,
+          msg,
+          user,
+          token,
+        });
+      } else {
+        res.status(401).json({
+          error: true,
+          msg,
+        });
+      }
+
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        error: true,
+        msg: "Server Error",
+      });
+    }
+  }
+};
+
+exports.logoutUser = async (req, res) => {
+  // req.session = null;
+  // req.logout();
+  // res.redirect("/");
+};

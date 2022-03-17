@@ -22,7 +22,7 @@ const Pricing = () => {
             {/* Packages */}
             <div className="container">
                 <div className="wrap">
-                <div className="card" id="card-1">
+                <div className="a_card" id="card-1">
                     <div  className="card-body">
                     
                         <div className="form-header"><h1>FREE (Trail Base)</h1></div>

@@ -1,47 +1,51 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
-import axios from "../App/axios.js";
+import * as userConstant from "../App/Redux/constants/userConstant";
+import { useDispatch, useSelector } from "react-redux";
 
 import Footer from "./LoginFooter/Footer";
 import Header from "./LoginHeader/Header";
+import { loginUser } from "../App/Redux/actions/UserActions";
 
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
+import { createBrowserHistory } from "history";
+
 import "./SignIn.css";
 
-const SignIn = ({ setToken, setUserType }) => {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  let history = useNavigate();
-  // const [error, setError] = useState(null);
-  const [confirmPass, setConfirmPass] = useState("");
+const SignIn = ({ setUserType }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
+  const [formError, setFormError] = useState("");
   const [modalShow, setModalShow] = useState(false);
+
+  const dispatch = useDispatch();
+  const history = createBrowserHistory();
+
+  const { error, msg, token } = useSelector((state) => state.adminUser);
+
+  const handleFocus = async (e) => {
+    setFormError("");
+  };
+
+  const isModalShow = async (e) => {
+    if (email === "" || password === "") {
+      setFormError("Please fill form complete");
+    } else {
+      setModalShow(true);
+    }
+  };
 
   const handleLogin = async (loginType) => {
     // e.preventDefault();
+
     setUserType(loginType);
     setModalShow(false);
 
-    axios
-      .post("user/login", {
-        email: email,
-        password,
-        userType: loginType,
-      })
-      .then((response) => {
-        console.log(`result: ${response.data.msg}`);
-        if (response.data.token) {
-          setToken(response.data.token);
-          history("/dashboard");
-        }
-      })
-      .catch((error) => {
-        setConfirmPass(error.response.data.msg);
-        console.error("There was an error!", error.response.data.msg);
-      });
+    dispatch(loginUser(email, password, loginType));
+    
   };
 
   return (
@@ -63,7 +67,7 @@ const SignIn = ({ setToken, setUserType }) => {
             className="mt-1"
             variant="secondary"
             onClick={() => {
-              handleLogin("admin");
+              handleLogin(userConstant.ADMIN);
             }}
           >
             Admin
@@ -72,7 +76,7 @@ const SignIn = ({ setToken, setUserType }) => {
             className="mt-3"
             variant="primary"
             onClick={() => {
-              handleLogin("teacher");
+              handleLogin(userConstant.TEACHER);
             }}
           >
             Teacher
@@ -81,7 +85,7 @@ const SignIn = ({ setToken, setUserType }) => {
             className="mt-3"
             variant="success"
             onClick={() => {
-              handleLogin("student");
+              handleLogin(userConstant.STUDENT);
             }}
           >
             Student
@@ -90,7 +94,7 @@ const SignIn = ({ setToken, setUserType }) => {
             className="mt-3"
             variant="info"
             onClick={() => {
-              handleLogin("parent");
+              handleLogin(userConstant.PARENT);
             }}
           >
             Parent
@@ -114,6 +118,7 @@ const SignIn = ({ setToken, setUserType }) => {
                   type="text"
                   name="username"
                   required="required"
+                  onFocus={handleFocus}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
@@ -124,6 +129,7 @@ const SignIn = ({ setToken, setUserType }) => {
                   type="password"
                   name="password"
                   required="required"
+                  onFocus={handleFocus}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
@@ -144,11 +150,10 @@ const SignIn = ({ setToken, setUserType }) => {
                   color: "red",
                 }}
               >
-                {confirmPass}
+                {formError}
               </span>
-
               <div className="form-group">
-                <button type="submit" onClick={() => setModalShow(true)}>
+                <button type="submit" onClick={isModalShow}>
                   Log In
                 </button>
               </div>

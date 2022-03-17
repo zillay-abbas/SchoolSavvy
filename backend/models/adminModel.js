@@ -4,19 +4,42 @@ const prisma = new PrismaClient.PrismaClient({
 });
 
 class Admin {
-  static async addUser(name, email, password) {
-    const user = {
-      name: name,
-      email: email,
-      passward: password,
-    };
-    return await prisma.user.create({ data: user });
+  static async addUser(name, email, password, status, isRemoved, configToken) {
+    return await prisma.user.create({
+      data: {
+        user_name: name,
+        user_email: email,
+        user_passward: password,
+        user_status: status,
+        user_is_removed: isRemoved,
+        user_verification: configToken,
+      },
+    });
   }
 
-  static async getUserbyEmail(email) {
-    return await prisma.users.findUnique({
+  static async getAdminbyToken(token) {
+    return await prisma.user.findUnique({
       where: {
-        email: email,
+        user_verification: token
+      },
+    });
+  }
+
+  static async updateUserVerification(id, status) {
+    return await prisma.user.update({
+      where: {
+        user_id: id,
+      },
+      data: {
+        user_status: status,
+      }
+    })
+  }
+
+  static async getAdminbyEmail(email) {
+    return await prisma.user.findUnique({
+      where: {
+        user_email: email,
       },
     });
   }
@@ -39,14 +62,14 @@ class Student {
     return await prisma.student.findMany({
       where: {
         email,
-      }
-    })
+      },
+    });
   }
 
   static async getStudentbyEmail(email) {
-    return await prisma.student.findMany({
+    return await prisma.school_student.findUnique({
       where: {
-        email
+        student_email: email
       },
     });
   }
@@ -103,13 +126,7 @@ class Teacher {
   }
 
   static async addTeacher(teacher) {
-    const {
-      name,
-      dob,
-      phone,
-      email,
-      hashPassword,
-    } = teacher;
+    const { name, dob, phone, email, hashPassword } = teacher;
 
     // Pass 'user' object into query
     return await prisma.teacher.create({
@@ -118,7 +135,7 @@ class Teacher {
         dob: new Date(dob),
         phone,
         email,
-        password: hashPassword
+        password: hashPassword,
       },
     });
   }
@@ -132,9 +149,9 @@ class Teacher {
   }
 
   static async getTeacherbyEmail(email) {
-    return await prisma.teacher.findMany({
+    return await prisma.school_teacher.findUnique({
       where: {
-        email: email,
+        teacher_email: email,
       },
     });
   }
@@ -146,9 +163,9 @@ class Parent {
   }
 
   static async getParentbyEmail(email) {
-    return await prisma.parent.findMany({
+    return await prisma.school_parent.findUnique({
       where: {
-        email: email
+        parent_email: email,
       },
     });
   }

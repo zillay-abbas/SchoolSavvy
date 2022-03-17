@@ -1,5 +1,6 @@
 .frm-clr {
   background: #80d7f1;
+  height: 100%;
 }
 .form {
   z-index: 15;
@@ -9,7 +10,7 @@
   border-radius: 4px;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
-  margin: 50px auto 50px;
+  margin: 69px auto;
   overflow: hidden;
 }
 

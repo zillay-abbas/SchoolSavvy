@@ -1,0 +1,34 @@
+.notice_item {
+    display: flex;
+    /* flex-direction: column; */
+    margin: 10px 15px;
+    justify-content: center;
+}
+
+.top_title {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 5px;
+}
+
+.task_icon {
+    border-radius: 50%;
+    padding: 5px;
+    color: #fff;
+    width: 10px;
+    height: 10px;
+}
+
+.notice_date {
+    /* padding: 0 10px; */
+}
+
+.notice_ico {
+    margin: 5px 5px;
+}
+
+.notice_desc {
+    font-weight: bold;
+    font-size: small;
+}
