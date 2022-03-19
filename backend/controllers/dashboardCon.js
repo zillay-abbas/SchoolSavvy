@@ -2,28 +2,47 @@ const PrismaClient = require("@prisma/client");
 const prisma = new PrismaClient.PrismaClient();
 const bcrypt = require("bcrypt");
 
-const { Student, Parent, Teacher } = require("../models/adminModel");
-const { Course, Grade, Batch } = require("../models/subjectModel");
+const { School } = require("../models/schoolModel");
+const { Student, Parent, Teacher } = require("../models/userModel");
+const { Subject } = require("../models/acadamicModel");
+
 
 exports.getDashboardDetails = async (req, res) => {
-  try {
-    const students = await Student.getStudents();
-    const teachers = await Teacher.getTeachers();
-    const parents = await Parent.getParents();
-    const subjects = await Course.getSubjects();
-    const presentStudents = await Student.getPresentStudents();
-    const absentStudents = await Student.getAbsentStudents();
 
-    res.status(200).json({
-      students,
-      teachers,
-      parents,
-      subjects,
-      presentStudents,
-      absentStudents,
-    });
+  const userID = req.user.user_id;
+  
+  try {
+    const school = await School.getSchoolbyUserID(userID);
+    if(school){
+
+      const student = await Student.getStudentsbySchool(school.school_id);
+
+      const parent = await Parent.getParentsbySchool(school.school_id);
+
+      const teacher = await Teacher.getTeachersbySchool(school.school_id);
+
+      const subject = await Subject.getSubjectsbySchoolID(school.school_id);
+
+      res.status(200).json({
+        error: false,
+        student,
+        parent,
+        teacher,
+        subject,
+      });
+    }
+    else {
+      res.status(400).json({ 
+        error:true,
+        msg: "No school found" 
+      });
+    }
   } catch (error) {
-    res.status(500).json({ msg: "Server Error" });
+    console.log(error);
+    res.status(500).json({ 
+      error:true,
+      msg: "Server Error" 
+    });
   }
 };
 

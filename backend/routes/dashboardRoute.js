@@ -15,7 +15,7 @@ const {
 
 //Register handle
 
-router.route("/details").get(getDashboardDetails);
+router.route("/detail").get(getDashboardDetails);
 
 router.route("/grade").post(addGrade).delete(removeGrade);
 

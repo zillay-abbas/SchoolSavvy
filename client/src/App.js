@@ -20,6 +20,7 @@ import { Package } from "./SignUp/Package/Package";
 
 import { UserDashboard } from "./UserDashboard/UserDashboard";
 
+
 import useToken from "./App/useToken.js";
 import { useSelector } from "react-redux";
 
@@ -27,9 +28,10 @@ function App() {
   const { authToken, setAuthToken } = useToken();
   const [userType, setUserType] = useState();
 
-  const { token } = useSelector((state) => state.adminUser);
+  const { token } = useSelector((state) => state.user);
 
   useEffect(() => {
+    console.log("apppppp rend");
     if (token) {
       setAuthToken(token);
     }
@@ -53,7 +55,7 @@ function App() {
         <Route
           path="/login"
           element={
-            <LoginAuth redirectTo="/user/dashboard">
+            <LoginAuth redirectTo="/dashboard">
               <SignIn set_token={setAuthToken} setUserType={setUserType} />
             </LoginAuth>
           }
@@ -62,7 +64,7 @@ function App() {
         <Route path="/register" element={<SignUp />} />
 
         <Route
-          path="/user/dashboard/*"
+          path="/dashboard/*"
           element={
             <RequireAuth redirectTo="/login">
               <UserDashboard />

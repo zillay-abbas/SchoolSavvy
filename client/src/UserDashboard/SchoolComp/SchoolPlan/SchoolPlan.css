@@ -1,0 +1,12 @@
+.accordion-item {
+    background-color: transparent !important;
+}
+
+.badge {
+    display:flex !important;
+    width: 20%;
+    align-items: center !important;
+    justify-content: center;
+    font-size: medium !important;
+    font-weight: lighter !important;
+}

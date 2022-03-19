@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const HomeHeader = () => {
   return (
@@ -51,20 +52,20 @@ const HomeHeader = () => {
               </li>
 
               <li className="nav-item mx-1">
-                <a className="nav-link text-center" href="/login">
+                <Link className="nav-link text-center" to="/login">
                   Login
-                </a>
+                </Link>
               </li>
             </ul>
 
-            <a href="/register">
+            <Link to="/register">
               <button
                 className="btn btn-outline-light my-2 my-sm-0"
                 type="submit"
               >
                 Free Registeration
               </button>
-            </a>
+            </Link>
           </div>
         </div>
       </nav>

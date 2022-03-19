@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
 
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
@@ -11,6 +13,7 @@ import PathHeading from "./PathHeading/PathHeading";
 import Home from "./Home/Home";
 
 import SchoolComp from "./SchoolComp/SchoolComp";
+import { loadDashboard } from "../App/Redux/actions/userAction";
 
 import "./UserDashboard.css";
 
@@ -18,12 +21,15 @@ export const UserDashboard = () => {
   let history = useNavigate();
 
   const [isOpen, setOpen] = useState(true);
+  const dispatch = useDispatch();
 
   const onToggle = () => {
     setOpen(!isOpen);
   };
 
   useEffect(() => {
+    console.log("dashh rend");
+
     history("home");
   }, []);
 
@@ -62,7 +68,6 @@ export const UserDashboard = () => {
         <div className="dash-info">
           {/* Heading */}
           <PathHeading />
-
           <Routes>
             <Route path="/home" element={<Home />} />
             <Route path="/school/*" element={<SchoolComp />} />

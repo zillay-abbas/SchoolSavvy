@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Footer from "./LoginFooter/Footer";
 import Header from "./LoginHeader/Header";
-import { loginUser } from "../App/Redux/actions/UserActions";
+import { loginUser } from "../App/Redux/actions/userAction";
 
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
@@ -15,16 +15,13 @@ import { createBrowserHistory } from "history";
 import "./SignIn.css";
 
 const SignIn = ({ setUserType }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("qwerfd");
+  const [password, setPassword] = useState("asdfssdf");
 
   const [formError, setFormError] = useState("");
   const [modalShow, setModalShow] = useState(false);
 
   const dispatch = useDispatch();
-  const history = createBrowserHistory();
-
-  const { error, msg, token } = useSelector((state) => state.adminUser);
 
   const handleFocus = async (e) => {
     setFormError("");

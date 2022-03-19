@@ -1,53 +1,53 @@
-import { createReducer } from "@reduxjs/toolkit";
+import * as actionTypes from "../constants/userConstant";
 
-const initialState = {
-  isAuthenticated: false,
+const tokenFromLocalStorage = localStorage.getItem("token")
+  ? JSON.parse(localStorage.getItem("token"))
+  : null;
+
+export const userReducer = (
+  state = { token: tokenFromLocalStorage },
+  action
+) => {
+  switch (action.type) {
+    case actionTypes.LOGIN_REQ:
+      return {
+        ...state,
+        loading: true,
+      };
+    case actionTypes.LOGIN_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        token: action.payload.token,
+        user: action.payload,
+      };
+    case actionTypes.LOGIN_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        token: null,
+        msg: action.payload.msg,
+      };
+    case actionTypes.DASHBOARD_REQ:
+      return {
+        ...state,
+        loading: true,
+      };
+
+    case actionTypes.DASHBOARD_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        dashboard: action.payload,
+      };
+    case actionTypes.DASHBOARD_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        dashboard: { msg: action.msg },
+      };
+
+    default:
+      return state;
+  }
 };
-
-export const userReducer = createReducer(initialState, {
-  loginRequest: (state) => {
-    state.loading = true;
-  },
-  loginSuccess: (state, action) => {
-    state.loading = false;
-    state.isAuthenticated = true;
-    state.user = action.payload.user;
-    state.token = action.payload.token;
-    state.msg = action.payload.msg;
-    state.error = action.payload.error;
-  },
-  loginFailure: (state, action) => {
-    state.loading = false;
-    state.isAuthenticated = false;
-    state.error = action.payload.error;
-    state.msg = action.payload.msg;
-  },
-
-  registerRequest: (state) => {
-    state.loading = true;
-  },
-  registerSuccess: (state, action) => {
-    state.loading = false;
-    state.isAuthenticated = true;
-    state.user = action.payload;
-  },
-  registerFailure: (state, action) => {
-    state.loading = false;
-    state.error = action.payload;
-    state.isAuthenticated = false;
-  },
-
-  loadUserRequest: (state) => {
-    state.loading = true;
-  },
-  loadUserSuccess: (state, action) => {
-    state.loading = false;
-    state.user = action.payload;
-    state.isAuthenticated = true;
-  },
-  loadUserFailure: (state, action) => {
-    state.loading = false;
-    state.error = action.payload;
-    state.isAuthenticated = false;
-  },
-})

@@ -54,15 +54,6 @@ function FormExample() {
           </InputGroup>
         </Form.Group>
       </Row>
-      <Row className="mb-3">
-        <Form.Group as={Col} md="6" controlId="validationCustom03">
-          <Form.Label>City</Form.Label>
-          <Form.Control type="text" placeholder="City" required />
-          <Form.Control.Feedback type="invalid">
-            Please provide a valid city.
-          </Form.Control.Feedback>
-        </Form.Group>
-      </Row>
       <Form.Group className="mb-3">
         <Form.Check
           required

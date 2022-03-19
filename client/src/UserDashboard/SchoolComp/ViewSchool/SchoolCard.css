@@ -1,0 +1,30 @@
+.accordion-header {
+  margin-bottom: 0;
+  padding: 0;
+  background: white;
+  border-radius: 10px;
+  border: 1px solid lightgray;
+  overflow: hidden;
+}
+
+.accordion-item {
+  border: none !important;
+  background-color: transparent;
+  margin: 10px 0;
+}
+
+.accordion-body {
+  background: lightgray;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  margin: 0 10px;
+}
+
+.school_opt {
+  display: flex;
+  justify-content: space-between;
+}
+
+.school_opt > .btn {
+  width: 30%;
+}

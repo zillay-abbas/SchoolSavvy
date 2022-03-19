@@ -18,7 +18,7 @@ schema
   .not()
   .spaces();
 
-const { Admin, Student, Parent, Teacher } = require("../models/adminModel");
+const { Admin, Student, Parent, Teacher } = require("../models/userModel");
 
 exports.registerUser = async (req, res) => {
   // Get form request
@@ -45,7 +45,7 @@ exports.registerUser = async (req, res) => {
         });
       } else {
         try {
-          const user = await Admin.getUserbyEmail(email);
+          const user = await Admin.getAdminbyEmail(email);
           // if same email already exists
           if (user) {
             res.status(200).json({
@@ -130,11 +130,12 @@ exports.verifyUser = async (req, res) => {
         const status = 1;
         const verifyUser = Admin.updateUserVerification(user.user_id, status);
 
-        res.status(401).json({
-          error: false,
-          msg: "Account Verified",
-          user: verifyUser,
-        });
+        // res.status(401).json({
+        //   error: false,
+        //   msg: "Account Verified",
+        //   user: verifyUser,
+        // });
+        res.redirect("http://localhost:3000/login");
       } else {
         res.status(401).json({
           error: true,
@@ -142,6 +143,7 @@ exports.verifyUser = async (req, res) => {
         });
       }
     } catch (error) {
+      console.log(error);
       res.status(500).json({
         error: true,
         msg: "Server Error",
@@ -150,7 +152,7 @@ exports.verifyUser = async (req, res) => {
   }
 };
 
-exports.checkUser = async (req, res) => {
+exports.loginUser = async (req, res) => {
   const { email, password, userType } = req.body;
 
   console.log(req.body);
@@ -195,20 +197,25 @@ exports.checkUser = async (req, res) => {
           let foundAdmin = await Admin.getAdminbyEmail(email);
 
           if (foundAdmin) {
-            const passwordMatch = await bcrypt.compare(
-              password,
-              foundAdmin.user_passward
-            );
+            if (foundAdmin.user_status) {
+              const passwordMatch = await bcrypt.compare(
+                password,
+                foundAdmin.user_passward
+              );
 
-            if (passwordMatch) {
-              let payload = { id: foundAdmin.id };
-              token = jwt.sign(payload, "secret");
+              if (passwordMatch) {
+                let payload = { id: foundAdmin.user_id };
+                token = jwt.sign(payload, "secret");
 
-              msg = "Login Successfuly";
-              user = foundAdmin;
-              isUserExists = true;
-            } else {
-              msg = "Invalid Password";
+                msg = "Login Successfuly";
+                user = foundAdmin;
+                isUserExists = true;
+              } else {
+                msg = "Invalid Password";
+              }
+            }
+            else {
+              msg = "Please verify your account form email to continue";
             }
           } else {
             msg = "User Not Found";
@@ -218,7 +225,6 @@ exports.checkUser = async (req, res) => {
           let foundTeacher = await Teacher.getTeacherbyEmail(email);
 
           if (foundTeacher) {
-
             const passwordMatch = await bcrypt.compare(
               password,
               foundTeacher.teacher_password
@@ -281,7 +287,6 @@ exports.checkUser = async (req, res) => {
           msg,
         });
       }
-
     } catch (error) {
       console.log(error);
       res.status(500).json({

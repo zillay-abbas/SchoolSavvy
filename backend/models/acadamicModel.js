@@ -1,18 +1,25 @@
 const PrismaClient = require("@prisma/client");
 const prisma = new PrismaClient.PrismaClient();
 
-class Course {
-  
-  static async addCourse(name, description, grade_id){
+class Subject {
+  static async addCourse(name, description, grade_id) {
     await prisma.course.create({
       data: {
         name: name,
         c_desription: description,
-        grade_id: grade_id
+        grade_id: grade_id,
       },
     });
   }
-  
+
+  static async getSubjectsbySchoolID(schoolID) {
+    return await prisma.school_course.findMany({
+      where: {
+        course_school_id: schoolID,
+      },
+    });
+  }
+
   static async getSubjects() {
     return await prisma.course.findMany();
   }
@@ -52,7 +59,7 @@ class Grade {
     });
   }
 
-  static async checkGrade(id){
+  static async checkGrade(id) {
     return await prisma.grade.findUnique({
       where: {
         grade_id: id,
@@ -79,4 +86,4 @@ class Batch {
   }
 }
 
-module.exports = { Course, Grade, Batch };
+module.exports = { Subject, Grade, Batch };
