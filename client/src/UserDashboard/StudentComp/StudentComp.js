@@ -16,14 +16,22 @@ const StudentComp = () => {
   let history = useNavigate();
 
   useEffect(() => {  
+<<<<<<< HEAD
     history('view');
+=======
+    history('add');
+>>>>>>> 3912ef269a04caeeb2979e8d5f6b3906b0247a3c
   }, []);
   
   return (
     <div className="student_cont h-100">
       <Card className="h-100">
         <Card.Header>
+<<<<<<< HEAD
           <Nav variant="tabs" defaultActiveKey="/view">
+=======
+          <Nav variant="tabs" defaultActiveKey="/add">
+>>>>>>> 3912ef269a04caeeb2979e8d5f6b3906b0247a3c
             <Nav.Item>
               <NavLink to="add" className="nav-link">
                 Add New Student

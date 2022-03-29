@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import validator from "validator";
+<<<<<<< HEAD
+=======
+import { useNavigate } from "react-router-dom";
+>>>>>>> 3912ef269a04caeeb2979e8d5f6b3906b0247a3c
 
 import axios from "../App/axios.js";
 import Footer from "../SignIn/LoginFooter/Footer";
@@ -20,6 +24,11 @@ const SignUp = () => {
   const [emailError, setEmailError] = useState("");
 
   const [fillErr, setFillErr] = useState("");
+<<<<<<< HEAD
+=======
+  
+  let navigate = useNavigate();
+>>>>>>> 3912ef269a04caeeb2979e8d5f6b3906b0247a3c
 
   const validatePassword = (value) => {
     setPassword(value);

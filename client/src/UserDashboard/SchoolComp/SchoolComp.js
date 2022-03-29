@@ -3,16 +3,23 @@ import React, { useEffect } from "react";
 import { Card, Nav } from "react-bootstrap";
 import { NavLink, Route, Routes, useNavigate } from "react-router-dom";
 
+<<<<<<< HEAD
 import AddSchool from './AddScool/AddSchool';
+=======
+import AddSchool from "./AddScool/AddSchool";
+import ViewSchool from "./ViewSchool/ViewSchool";
+import SchoolPlan from "./SchoolPlan/SchoolPlan";
+
+>>>>>>> 3912ef269a04caeeb2979e8d5f6b3906b0247a3c
 import "./SchoolComp.css";
 
 const SchoolComp = () => {
   let history = useNavigate();
 
-  useEffect(() => {  
-    history('view');
+  useEffect(() => {
+    history("view");
   }, []);
-  
+
   return (
     <div className="school_cont h-100">
       <Card className="h-100">
@@ -39,7 +46,11 @@ const SchoolComp = () => {
           <Routes>
             <Route path="/view" element={<>view</>} />
             <Route path="/add" element={<AddSchool />} />
+<<<<<<< HEAD
             <Route path="/remove" element={<>remove</>} />
+=======
+            <Route path="/plan" element={<SchoolPlan />} />
+>>>>>>> 3912ef269a04caeeb2979e8d5f6b3906b0247a3c
           </Routes>
         </Card.Body>
       </Card>

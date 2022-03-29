@@ -109,55 +109,50 @@ model school_grade {
 }
 
 model school_parent {
-  parent_id         Int              @id @default(autoincrement())
-  parent_name       String           @db.VarChar(45)
-  parent_dob        DateTime         @db.Date
-  parent_phone      String           @db.VarChar(15)
-  parent_status     Boolean?
-  parent_email      String           @unique(map: "email_UNIQUE") @db.VarChar(45)
-  parent_password   String           @db.VarChar(70)
-  parent_is_removed Int              @db.TinyInt
-  parent_school_id  Int
-  user_school       user_school      @relation(fields: [parent_school_id], references: [school_id], onDelete: NoAction, onUpdate: NoAction, map: "parent_school")
-  school_student    school_student[]
+  parent_id        Int              @id @default(autoincrement())
+  parent_phone     String           @db.VarChar(15)
+  parent_status    Boolean?
+  parent_school_id Int
+  parent_user_id   Int
+  user_school      user_school      @relation(fields: [parent_school_id], references: [school_id], onDelete: NoAction, onUpdate: NoAction, map: "parent_school")
+  user             user             @relation(fields: [parent_user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "parent_user")
+  school_student   school_student[]
 
   @@index([parent_school_id], map: "parent_school_idx")
+  @@index([parent_user_id], map: "parent_user_idx")
 }
 
 model school_student {
   student_id         Int                  @id @default(autoincrement())
-  student_name       String               @db.VarChar(45)
   student_dob        DateTime             @db.Date
-  student_phone      String?              @db.VarChar(15)
   student_join_date  DateTime             @db.Date
   student_status     Boolean?
-  student_email      String               @unique(map: "email_UNIQUE") @db.VarChar(45)
-  student_password   String               @db.VarChar(70)
   student_parent_id  Int
-  student_class_id   Int
-  student_is_removed Int                  @db.TinyInt
+  student_class_id   Int?
   student_school_id  Int
+  student_user_id    Int
   school_parent      school_parent        @relation(fields: [student_parent_id], references: [parent_id], onDelete: NoAction, onUpdate: NoAction, map: "student_parent")
   user_school        user_school          @relation(fields: [student_school_id], references: [school_id], onDelete: NoAction, onUpdate: NoAction, map: "student_school")
+  user               user                 @relation(fields: [student_user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "student_user")
   school_attendence  school_attendence[]
   school_exam_result school_exam_result[]
 
   @@index([student_parent_id], map: "student_parent_idx")
   @@index([student_school_id], map: "student_school_idx")
+  @@index([student_user_id], map: "student_user_idx")
 }
 
 model school_teacher {
   teacher_id        Int         @id @default(autoincrement())
-  teacher_name      String      @db.VarChar(45)
-  teacher_dob       DateTime    @db.Date
   teacher_phone     String      @db.VarChar(15)
   tacher_status     Boolean?
-  teacher_email     String      @unique(map: "email_UNIQUE") @db.VarChar(45)
-  teacher_password  String      @db.VarChar(70)
   teacher_school_id Int
+  teacher_user_id   Int
   user_school       user_school @relation(fields: [teacher_school_id], references: [school_id], onDelete: NoAction, onUpdate: NoAction, map: "teacher_school_link")
+  user              user        @relation(fields: [teacher_user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "teacher_user")
 
   @@index([teacher_school_id], map: "teacher_school_idx")
+  @@index([teacher_user_id], map: "teacher_user_idx")
 }
 
 model user {
@@ -167,14 +162,15 @@ model user {
   user_passward        String                 @db.VarChar(70)
   user_status          Int                    @db.TinyInt
   user_is_removed      Int                    @db.TinyInt
-  user_verification    String                 @unique(map: "user_verification_UNIQUE") @db.VarChar(200)
-  user_plan_id         Int?
-  plan                 plan?                  @relation(fields: [user_plan_id], references: [plan_id], onDelete: NoAction, onUpdate: NoAction, map: "user_plan")
+  user_role            Int
+  admin_user           admin_user?
+  school_parent        school_parent[]
+  school_student       school_student[]
+  school_teacher       school_teacher[]
   user_package_payment user_package_payment[]
   user_school          user_school[]
-  user_subscription    user_subscription[]
-
-  @@index([user_plan_id], map: "user_plan_idx")
+  user_subscription    user_subscription?
+  user_verification    user_verification?
 }
 
 model user_package_payment {
@@ -199,6 +195,7 @@ model user_school {
   school_is_removed  Int                  @db.TinyInt
   school_user_id     Int
   user               user                 @relation(fields: [school_user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "school_user")
+  admin_user         admin_user?
   school_attendence  school_attendence[]
   school_class_room  school_class_room[]
   school_course      school_course[]
@@ -236,19 +233,39 @@ model plan {
   plan_name         String              @db.VarChar(45)
   plan_price        Decimal             @db.Decimal(10, 0)
   plan_is_active    Int                 @db.TinyInt
-  user              user[]
   user_subscription user_subscription[]
 }
 
 model user_subscription {
   subscription_id Int      @id @default(autoincrement())
-  sb_user_id      Int
+  sb_user_id      Int      @unique(map: "sb_user_id_UNIQUE")
   sb_plan_id      Int
   sb_start_time   DateTime @db.Date
   sb_end_time     DateTime @db.Date
   plan            plan     @relation(fields: [sb_plan_id], references: [plan_id], onDelete: NoAction, onUpdate: NoAction, map: "subscription_plan")
-  user            user     @relation(fields: [sb_user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "subscription_user")
+  user            user     @relation(fields: [sb_user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "subscription_user")
 
   @@index([sb_plan_id], map: "subscription_plan_idx")
   @@index([sb_user_id], map: "subscription_user_idx")
+}
+
+model user_verification {
+  id               Int    @id @default(autoincrement())
+  user_id          Int    @unique(map: "user_id_UNIQUE")
+  is_verified      Int    @db.TinyInt
+  verifiction_code String @unique(map: "verifiction_code_UNIQUE") @db.VarChar(200)
+  user             user   @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "verify_user")
+
+  @@index([user_id], map: "verify_user_idx")
+}
+
+model admin_user {
+  admin_id        Int         @id @default(autoincrement())
+  admin_user_id   Int         @unique(map: "admin_user_id_UNIQUE")
+  admin_school_id Int         @unique(map: "admin_school_id_UNIQUE")
+  user_school     user_school @relation(fields: [admin_school_id], references: [school_id], onDelete: Cascade, onUpdate: NoAction, map: "admin_school")
+  user            user        @relation(fields: [admin_user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "admin_user")
+
+  @@index([admin_school_id], map: "admin_school_idx")
+  @@index([admin_user_id], map: "admin_user_idx")
 }

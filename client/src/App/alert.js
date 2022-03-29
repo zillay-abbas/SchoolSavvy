@@ -1,22 +1,18 @@
-import { useState } from "react";
-import Alert from "react-bootstrap/Alert";
-import Button from "react-bootstrap/esm/Button";
-import { render } from "react-dom";
+import React from "react";
+import { Modal } from "react-bootstrap";
 
-function ShowAlert({ isShow, alertType, alertHead, alertDesc }) {
-  const [show, setShow] = useState(true);
+import "./Toast.css";
 
-  if (show) {
-    return (
-      <Alert variant={alertType} onClose={() => setShow(false)}>
-        <Alert.Heading>{alertHead}</Alert.Heading>
-        <p>
-          {alertDesc}
-        </p>
-      </Alert>
-    );
-  }
-  return <Button onClick={() => setShow(true)}>Show Alert</Button>;
-}
+const ShowToast = ({ show, msg, setShow }) => {
+  return (
+    <>
+      <Modal show={show} onHide={setShow}>
+        <Modal.Header className="modal_border" closeButton>
+          <Modal.Title className="modal_txt_title">{msg}</Modal.Title>
+        </Modal.Header>
+      </Modal>
+    </>
+  );
+};
 
-render(<ShowAlert />);
+export default ShowToast;

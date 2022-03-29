@@ -2,6 +2,7 @@ const PrismaClient = require("@prisma/client");
 const prisma = new PrismaClient.PrismaClient();
 const bcrypt = require("bcrypt");
 
+<<<<<<< HEAD
 const { Student, Parent, Teacher } = require("../models/adminModel");
 const { Course, Grade, Batch } = require("../models/subjectModel");
 
@@ -21,9 +22,285 @@ exports.getDashboardDetails = async (req, res) => {
       subjects,
       presentStudents,
       absentStudents,
+=======
+const { School } = require("../models/schoolModel");
+const { Subject } = require("../models/acadamicModel");
+const {
+  Student,
+  Parent,
+  Teacher,
+  User,
+  Admin,
+} = require("../models/userModel");
+
+exports.getDashboardDetails = async (req, res) => {
+  const userID = req.user.user_id;
+
+  try {
+    const schoolID = await School.getActiveSchoolbyUserID(userID);
+    const school = await School.getSchoolbySchoolID(schoolID.admin_school_id);
+
+    if (school) {
+      const student = await Student.getStudentsbySchool(school.school_id);
+
+      const parent = await Parent.getParentsbySchool(school.school_id);
+
+      const teacher = await Teacher.getTeachersbySchool(school.school_id);
+
+      const subject = await Subject.getSubjectsbySchoolID(school.school_id);
+
+      const presentStudent = await Student.getPresentStudents(school.school_id);
+
+      const absentStudent = await Student.getAbsentStudents(school.school_id);
+
+      res.status(200).json({
+        error: false,
+        school: {
+          id: school[0].school_id,
+          name: school[0].school_name,
+          description: school[0].school_desc,
+          email: school[0].school_email,
+          userID: school[0].school_user_id,
+        },
+        student,
+        parent,
+        teacher,
+        subject,
+        presentStudent,
+        absentStudent,
+      });
+    } else {
+      res.status(400).json({
+        error: true,
+        msg: "No school found",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: true,
+      isDialog: true,
+      msg: "Server Error",
+>>>>>>> 3912ef269a04caeeb2979e8d5f6b3906b0247a3c
     });
   } catch (error) {
     res.status(500).json({ msg: "Server Error" });
+  }
+};
+
+exports.getUserbyToken = async (req, res) => {
+  const userID = req.user.user_id;
+  try {
+    let foundUser = await User.getUserbyID(userID);
+    if (foundUser) {
+      res.status(200).json({
+        error: false,
+        msg: "Login Successfuly",
+        user: foundUser,
+      });
+    } else {
+      res.status(401).json({
+        error: true,
+        msg: "User Not Found",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      error: true,
+      msg: "Server error",
+    });
+  }
+};
+
+exports.createSchool = async (req, res) => {
+  const { name, desc, email } = req.body;
+  const userID = req.user.user_id;
+
+  if (!name || !email || !desc) {
+    res.status(400).json({
+      error: true,
+      isDialog: false,
+      msg: "Input not complete",
+    });
+  } else {
+    try {
+      const schoolList = await School.getSchoolsbyUserID(userID);
+      const userPlan = await Admin.getSubscription(userID);
+
+      const status = 0;
+      let isCreate = false;
+      let msg = "";
+
+      if (userPlan[0].sb_plan_id === 1) {
+        if (schoolList.length >= 3) {
+          msg =
+            "You are not allowed to create more than three schools in free plan";
+        } else {
+          isCreate = true;
+        }
+      } else {
+        if (schoolList.length >= 5) {
+          msg =
+            "You are not allowed to create more than five schools in free plan";
+        } else {
+          isCreate = true;
+        }
+      }
+
+      if (!isCreate) {
+        res.status(400).json({
+          error: true,
+          isDialog: true,
+          msg,
+        });
+      } else {
+        const school = await School.createSchool(
+          name,
+          desc,
+          email,
+          status,
+          userID
+        );
+
+        const chkActive = await School.getActiveSchoolbyUserID(userID);
+
+        if (!chkActive) {
+          const setActive = await School.addActiveSchool(
+            school.school_id,
+            userID
+          );
+        }
+
+        res.status(200).json({
+          error: false,
+          isDialog: true,
+          msg: "School created against your account.",
+          school,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        error: true,
+        isDialog: true,
+        msg: "Server error",
+      });
+    }
+  }
+};
+
+exports.getSchool = async (req, res) => {
+  const id = req.user.user_id;
+  try {
+    const school = await School.getSchoolsbyUserID(id);
+
+    if (school.length > 0) {
+      res.status(200).json({
+        error: false,
+        isDialog: false,
+        school,
+      });
+    } else {
+      res.status(404).json({
+        error: true,
+        isDialog: false,
+        msg: "You don't have any schools",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: true,
+      isDialog: true,
+      msg: "Server Error",
+    });
+  }
+};
+
+exports.removeSchool = async (req, res) => {
+  const { schoolID } = req.body;
+  console.log(schoolID);
+
+  try {
+    const school = await School.removeSchool(schoolID);
+    res.status(200).json({
+      error: false,
+      isDialog: true,
+      msg: "School removed",
+      school,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: true,
+      isDialog: true,
+      msg: "Server error",
+    });
+  }
+};
+
+exports.updateSchool = async (req, res) => {
+  const { id, name, desc, email } = req.body;
+
+  if (!id || !name || !email || !desc) {
+    res.status(400).json({
+      error: true,
+      isDialog: true,
+      msg: "Input not complete",
+    });
+  } else {
+    try {
+      const updatedSchool = await School.updateSchool(id, name, desc, email);
+      res.status(200).json({
+        error: false,
+        isDialog: true,
+        msg: "School updated",
+        school: updatedSchool,
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: true,
+        isDialog: true,
+        msg: "Server error",
+      });
+    }
+  }
+};
+
+exports.setSchoolActive = async (req, res) => {
+  const { userID, schoolID } = req.body;
+
+  console.log(`userid:: ${userID}`);
+  console.log(`schid:: ${schoolID}`);
+
+  if (!userID || !schoolID) {
+    res.status(400).json({
+      error: true,
+      isDialog: true,
+      msg: "Input not complete",
+    });
+  } else {
+    try {
+      const setActiveSchool = await School.setActiveSchool(userID, schoolID);
+      const getActiveSchool = await School.getSchoolbySchoolID(setActiveSchool.admin_school_id);
+
+      res.status(200).json({
+        error: false,
+        isDialog: false,
+        activeSchool: {
+          id: getActiveSchool[0].school_id,
+          name: getActiveSchool[0].school_name,
+          description: getActiveSchool[0].school_desc,
+          email: getActiveSchool[0].school_email,
+          userID: getActiveSchool[0].school_user_id,
+        },
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: true,
+        isDialog: true,
+        msg: "Server error",
+      });
+    }
   }
 };
 
@@ -233,7 +510,6 @@ exports.addStudent = async (req, res) => {
         msg: "User with this email alreay exists",
       });
     }
-
   }
 };
 

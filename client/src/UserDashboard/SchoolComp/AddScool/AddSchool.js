@@ -1,18 +1,48 @@
 import React, { useState } from "react";
 
-import { Button, Form, Row, Col, InputGroup } from "react-bootstrap";
+import { Button, Form, Row, Col, InputGroup, Spinner } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import validator from "validator";
 
-function FormExample() {
+import { createSchool } from "../../../App/Redux/Action/schoolActions";
+import ShowToast from "../../../App/Toast";
+
+import "./AddSchool.css";
+
+function AddSchool() {
+  const dispatch = useDispatch();
+  const { loading, isDialog, msg } = useSelector((state) => state.school);
+
   const [validated, setValidated] = useState(false);
 
-  const handleSubmit = (event) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [email, setEmail] = useState("");
 
-    setValidated(true);
+  const [emailValid, setEmailValid] = useState("");
+
+  const validateEmail = (email) => {
+    setEmail(email);
+
+    if (validator.isEmail(email) || !email) {
+      setEmailValid("");
+    } else {
+      setEmailValid("Please enter a valid email.");
+    }
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+
+    if (form.checkValidity() === false) {
+      event.stopPropagation();
+      setValidated(true);
+    }
+    if (validator.isEmail(email)) {
+      setValidated(true);
+      dispatch(createSchool(name, description, email));
+    }
   };
 
   return (
@@ -24,9 +54,12 @@ function FormExample() {
             required
             type="text"
             placeholder="School name"
-            // defaultValue="Mark"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
-          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">
+            Please enter a school name.
+          </Form.Control.Feedback>
         </Form.Group>
         <Form.Group as={Col} md="4" controlId="validationCustom02">
           <Form.Label>School description</Form.Label>
@@ -34,9 +67,12 @@ function FormExample() {
             required
             type="text"
             placeholder="Description"
-            // defaultValue="Otto"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
-          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+          <Form.Control.Feedback type="invalid">
+            Please enter a description.
+          </Form.Control.Feedback>
         </Form.Group>
         <Form.Group as={Col} md="4" controlId="validationCustomUsername">
           <Form.Label>School email</Form.Label>
@@ -44,16 +80,28 @@ function FormExample() {
             <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
             <Form.Control
               type="text"
-              placeholder="Username"
+              placeholder="Email"
               aria-describedby="inputGroupPrepend"
               required
+              value={email}
+              onChange={(e) => validateEmail(e.target.value)}
             />
             <Form.Control.Feedback type="invalid">
               Please enter a email.
             </Form.Control.Feedback>
+            <span
+              className="invalid-feedback feed_active"
+              style={{
+                fontWeight: "",
+                color: "#DC3545",
+              }}
+            >
+              {emailValid}
+            </span>
           </InputGroup>
         </Form.Group>
       </Row>
+<<<<<<< HEAD
       <Row className="mb-3">
         <Form.Group as={Col} md="6" controlId="validationCustom03">
           <Form.Label>City</Form.Label>
@@ -72,9 +120,27 @@ function FormExample() {
         />
       </Form.Group>
       <Button type="submit">Create School</Button>
+=======
+      <Button type="submit">
+        {loading ? (
+          <>
+            <Spinner
+              as="span"
+              animation="grow"
+              size="sm"
+              role="status"
+              aria-hidden="true"
+            />
+            Loading...
+          </>
+        ) : (
+          <>Create School</>
+        )}
+      </Button>
+      <ShowToast show={isDialog} msg={msg} from={"school"}/>
+>>>>>>> 3912ef269a04caeeb2979e8d5f6b3906b0247a3c
     </Form>
   );
 }
 
-// render(<FormExample />);
-export default FormExample;
+export default AddSchool;

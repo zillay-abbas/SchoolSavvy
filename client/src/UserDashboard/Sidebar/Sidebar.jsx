@@ -3,12 +3,16 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import SideComp from "./SideComp/SideComp";
+import { useDispatch, useSelector } from "react-redux";
 
 import "./Sidebar.css";
 import { NavLink } from "react-router-dom";
 
 const UserSidebar = ({ is_Open, on_Toggle }) => {
   const sideDrawerClass = ["sidebar_left"];
+  const dispatch = useDispatch();
+
+  const { detail } = useSelector(state => state.user);
 
   if (is_Open) {
     sideDrawerClass.push("show");
@@ -24,14 +28,22 @@ const UserSidebar = ({ is_Open, on_Toggle }) => {
               is_Open ? "user_name py-1 t-bold-dark" : "user_name_none"
             }
           >
-            User Name
+            {detail?.name}
           </span>
         </div>
         <div className="opt_section">
           <ul className={is_Open ? "submenu" : "submenu p-none"}>
             {SideComp.map((component, index) => {
               return (
-                <li className="py_5" onClick={component?.handleClick} key={index}>
+                <li
+                  className="py_5"
+                  onClick={
+                    component.handleClick
+                      ? () => dispatch(component?.handleClick)
+                      : component?.handleClick
+                  }
+                  key={index}
+                >
                   <NavLink
                     to={component.to}
                     className={({ isActive }) =>

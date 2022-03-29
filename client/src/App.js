@@ -7,7 +7,6 @@ import {
   Navigate,
 } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import { createBrowserHistory } from "history";
 
 import LandingPage from "./LandingPage/LandingPage";
 import Contact from "./LandingPage/Contact/Contact";
@@ -16,15 +15,13 @@ import Features from "./LandingPage/Features/Features";
 
 import SignIn from "./SignIn/SignIn";
 import SignUp from "./SignUp/SignUp";
-import { Package } from "./SignUp/Package/Package";
 
 import { UserDashboard } from "./UserDashboard/UserDashboard";
 
-
-import useToken from "./App/useToken.js";
 import { useSelector } from "react-redux";
 
 function App() {
+<<<<<<< HEAD
   const { authToken, setAuthToken } = useToken();
   const [userType, setUserType] = useState();
 
@@ -36,42 +33,64 @@ function App() {
     }
   }, [token]);
 
+=======
+ 
+  const { token } = useSelector((state) => state.user);
+
+>>>>>>> 3912ef269a04caeeb2979e8d5f6b3906b0247a3c
   function RequireAuth({ children, redirectTo }) {
-    let isAuthenticated = authToken;
+    let isAuthenticated = token;
     return isAuthenticated ? children : <Navigate to={redirectTo} />;
   }
 
   function LoginAuth({ children, redirectTo }) {
-    let isAuthenticated = authToken;
+    let isAuthenticated = token;
     return isAuthenticated ? <Navigate to={redirectTo} /> : children;
   }
 
   return (
-    <Router history={createBrowserHistory}>
+    <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
 
         <Route
           path="/login"
           element={
+<<<<<<< HEAD
             <LoginAuth redirectTo="/user/dashboard">
               <SignIn set_token={setAuthToken} setUserType={setUserType} />
+=======
+            <LoginAuth redirectTo="/dashboard">
+              {/* set_token={setAuthToken} setUserType={setUserType} */}
+              <SignIn  />
+>>>>>>> 3912ef269a04caeeb2979e8d5f6b3906b0247a3c
             </LoginAuth>
           }
         />
 
-        <Route path="/register" element={<SignUp />} />
+        <Route
+          path="/register"
+          element={
+            <LoginAuth redirectTo="/dashboard">
+              <SignUp />
+            </LoginAuth>
+          }
+        />
 
         <Route
           path="/user/dashboard/*"
           element={
+<<<<<<< HEAD
             // <RequireAuth redirectTo="/login">
               <UserDashboard />
             // </RequireAuth>
+=======
+            <RequireAuth redirectTo="/login">
+              <UserDashboard></UserDashboard>
+            </RequireAuth>
+>>>>>>> 3912ef269a04caeeb2979e8d5f6b3906b0247a3c
           }
         />
-
-        <Route path="/register/subscription" element={<Package />} />
 
         <Route path="/contact" element={<Contact />} />
 

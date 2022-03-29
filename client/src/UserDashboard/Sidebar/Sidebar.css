@@ -120,5 +120,7 @@
   .sidebar_left.show {
     transform: translate(0);
     width: 240px;
+    height: fit-content;
+    border-bottom-right-radius: 5px;
   }
 }

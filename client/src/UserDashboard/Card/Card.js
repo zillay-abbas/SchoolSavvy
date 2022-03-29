@@ -1,10 +1,15 @@
 import React from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useSelector } from "react-redux";
 
 import "./Card.css";
 
 const Card = () => {
+
+  const { detail } = useSelector(state => state.dashboard);
+
+
   return (
     <div className="sch-card">
 
@@ -17,7 +22,7 @@ const Card = () => {
         </div>
         <div className="card__xp">
           <div className="card__name">Students</div>
-          <div className="card__value">150</div>
+          <div className="card__value">{ detail ? detail.student.lenght : 0}</div>
         </div>
       </div>
 
@@ -30,7 +35,7 @@ const Card = () => {
         </div>
         <div className="card__xp">
           <div className="card__name">Parents</div>
-          <div className="card__value">9</div>
+          <div className="card__value">{ detail ? detail.parent.lenght : 0}</div>
         </div>
       </div>
 
@@ -43,7 +48,7 @@ const Card = () => {
         </div>
         <div className="card__xp">
           <div className="card__name">Teachers</div>
-          <div className="card__value">15</div>
+          <div className="card__value">{ detail ? detail.teacher.lenght : 0}</div>
         </div>
       </div>
 
@@ -56,7 +61,7 @@ const Card = () => {
         </div>
         <div className="card__xp">
           <div className="card__name">Subjects</div>
-          <div className="card__value">20</div>
+          <div className="card__value">{ detail ? detail.subject.lenght : 0}</div>
         </div>
       </div>
       

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import Chart from "react-apexcharts";
+import { useSelector } from "react-redux";
 
 import "./BarChart.css";
 
@@ -10,9 +11,9 @@ const BarChart = () => {
       chart: {
         id: "basic-bar",
       },
-      xaxis: {
-        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
-      },
+      // xaxis: {
+      //   categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
+      // },
 
       plotOptions: {
         bar: {
@@ -48,11 +49,17 @@ const BarChart = () => {
 
     series: [
       {
-        name: "series-1",
+        name: "Present Student",
         data: [90, 40, 45, 50, 49, 60, 70, 91],
       },
+      {
+        name: "Absent Student",
+        data: [90, 40, 45, 50, 49, 60, 70, 91],
+      }
     ],
   });
+
+  const { detail } = useSelector(state => state.dashboard);
 
   return (
     <div className="bar_chart background-blue">
@@ -72,11 +79,11 @@ const BarChart = () => {
         <div className="chart_values">
           <div className="chart_val border_rig">
             <h6 className="text-muted mb-2">Total present student</h6>
-            <h3>151</h3>
+            <h3>{detail ? detail.presentStudent.length : 0}</h3>
           </div>
           <div className="chart_val">
             <h6 className="text-muted mb-2">Total absent student</h6>
-            <h3>151</h3>
+            <h3>{detail ? detail.absentStudent.length : 0}</h3>
           </div>
         </div>
 
