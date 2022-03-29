@@ -5,7 +5,7 @@ const passport = require("./middlewares/passport");
 const userRoute = require("./routes/userRoute");
 const dashboardRoute = require("./routes/dashboardRoute");
 const userPlanRoute = require("./routes/userPlanRoute");
-
+const webhook = require("./routes/webhookRoute");
 const app = express();
 
 app.use(express.json());
@@ -15,7 +15,8 @@ app.use(express.urlencoded({ extended: false}));
 app.use(passport.initialize());
 
 app.use("/v1/user", userRoute);
-app.use("/v1/plan", passport.authenticate('jwt', { session: false }), userPlanRoute);
 app.use("/v1/user/dashboard", passport.authenticate('jwt', { session: false }), dashboardRoute);
+app.use("/v1/user/plan", passport.authenticate('jwt', { session: false }), userPlanRoute);
+app.use("/v1/user/webhook", webhook);
 
 module.exports = app;

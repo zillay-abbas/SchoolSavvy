@@ -1,0 +1,8 @@
+.modal_border {
+    border: calc(0.3rem - 1px) !important;
+}
+
+.modal_txt_title {
+    font-size: 1rem !important;
+    margin-right: 10px ;
+}

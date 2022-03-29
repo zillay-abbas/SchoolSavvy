@@ -28,3 +28,13 @@
 .school_opt > .btn {
   width: 30%;
 }
+
+.left_p20 {
+  margin-bottom: 0rem;
+  width: 40%;
+  overflow: hidden;
+}
+
+.pad_rig {
+  width: 40%;
+}

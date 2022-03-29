@@ -7,7 +7,6 @@ import {
   Navigate,
 } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import { createBrowserHistory } from "history";
 
 import LandingPage from "./LandingPage/LandingPage";
 import Contact from "./LandingPage/Contact/Contact";
@@ -16,39 +15,27 @@ import Features from "./LandingPage/Features/Features";
 
 import SignIn from "./SignIn/SignIn";
 import SignUp from "./SignUp/SignUp";
-import { Package } from "./SignUp/Package/Package";
 
 import { UserDashboard } from "./UserDashboard/UserDashboard";
 
-
-import useToken from "./App/useToken.js";
 import { useSelector } from "react-redux";
 
 function App() {
-  const { authToken, setAuthToken } = useToken();
-  const [userType, setUserType] = useState();
-
+ 
   const { token } = useSelector((state) => state.user);
 
-  useEffect(() => {
-    console.log("apppppp rend");
-    if (token) {
-      setAuthToken(token);
-    }
-  }, [token]);
-
   function RequireAuth({ children, redirectTo }) {
-    let isAuthenticated = authToken;
+    let isAuthenticated = token;
     return isAuthenticated ? children : <Navigate to={redirectTo} />;
   }
 
   function LoginAuth({ children, redirectTo }) {
-    let isAuthenticated = authToken;
+    let isAuthenticated = token;
     return isAuthenticated ? <Navigate to={redirectTo} /> : children;
   }
 
   return (
-    <Router history={createBrowserHistory}>
+    <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
 
@@ -56,23 +43,29 @@ function App() {
           path="/login"
           element={
             <LoginAuth redirectTo="/dashboard">
-              <SignIn set_token={setAuthToken} setUserType={setUserType} />
+              {/* set_token={setAuthToken} setUserType={setUserType} */}
+              <SignIn  />
             </LoginAuth>
           }
         />
 
-        <Route path="/register" element={<SignUp />} />
+        <Route
+          path="/register"
+          element={
+            <LoginAuth redirectTo="/dashboard">
+              <SignUp />
+            </LoginAuth>
+          }
+        />
 
         <Route
           path="/dashboard/*"
           element={
             <RequireAuth redirectTo="/login">
-              <UserDashboard />
+              <UserDashboard></UserDashboard>
             </RequireAuth>
           }
         />
-
-        <Route path="/register/subscription" element={<Package />} />
 
         <Route path="/contact" element={<Contact />} />
 

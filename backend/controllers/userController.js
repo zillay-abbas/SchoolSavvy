@@ -5,6 +5,7 @@ var passwordValidator = require("password-validator");
 
 const sendEmail = require("../middlewares/eMail");
 const userConstant = require("../constant/userConstant");
+const role = require("../constant/roles");
 
 var schema = new passwordValidator();
 schema
@@ -18,7 +19,13 @@ schema
   .not()
   .spaces();
 
-const { Admin, Student, Parent, Teacher } = require("../models/userModel");
+const {
+  Admin,
+  Student,
+  Parent,
+  Teacher,
+  User,
+} = require("../models/userModel");
 
 exports.registerUser = async (req, res) => {
   // Get form request
@@ -45,7 +52,7 @@ exports.registerUser = async (req, res) => {
         });
       } else {
         try {
-          const user = await Admin.getAdminbyEmail(email);
+          const user = await User.getUserbyEmail(email);
           // if same email already exists
           if (user) {
             res.status(200).json({
@@ -55,14 +62,16 @@ exports.registerUser = async (req, res) => {
           } else {
             const secret = "secret";
             const status = (isRemoved = 0);
-
+            let date = new Date();
+            let endDate = new Date();
+            
             const token = jwt.sign({ email: email }, secret);
 
             const mailVerification = await sendEmail(
               name,
               email,
               "Account Verification",
-              "Click button to verify email",
+              "Your free trail ends after three months",
               token
             );
 
@@ -72,14 +81,19 @@ exports.registerUser = async (req, res) => {
               //hash password encrypt password
               let hashPassword = await bcrypt.hash(password, 10);
 
-              const user = await Admin.addUser(
+              const user = await User.addUser(
                 name,
                 email,
                 hashPassword,
                 status,
                 isRemoved,
-                token
+                role.ADMIN
               );
+
+              endDate.setMonth(endDate.getMonth() + 3);
+              await Admin.addSubscription(user.user_id, date, endDate);
+
+              await Admin.addVerification(user.user_id, status, token);
 
               // if user added successfully
               res.status(200).json({
@@ -128,7 +142,7 @@ exports.verifyUser = async (req, res) => {
 
       if (user) {
         const status = 1;
-        const verifyUser = Admin.updateUserVerification(user.user_id, status);
+        const verifyUser = Admin.updateVerification(user.user_id, status);
 
         // res.status(401).json({
         //   error: false,
@@ -153,138 +167,68 @@ exports.verifyUser = async (req, res) => {
 };
 
 exports.loginUser = async (req, res) => {
-  const { email, password, userType } = req.body;
+  const { email, password } = req.body;
 
   console.log(req.body);
   // Validation checking
-  if (!email || !password || !userType) {
+  if (!email || !password) {
     res.status(400).json({
       error: true,
       msg: "Please fill all fields",
     });
   } else {
-    let isUserExists = false;
-    let user, msg, token;
     try {
-      switch (userType) {
-        case userConstant.STUDENT:
-          let foundUser = await Student.getStudentbyEmail(email);
+      let foundUser = await User.getUserbyEmail(email);
 
-          if (foundUser) {
-            const passwordMatch = await bcrypt.compare(
-              password,
-              foundUser.student_password
-            );
+      if (foundUser) {
+        const passwordMatch = await bcrypt.compare(
+          password,
+          foundUser.user_passward
+        );
 
-            if (passwordMatch) {
-              console.log(`user login ${foundUser}`);
+        if (passwordMatch) {
+          let payload = { id: foundUser.user_id };
+          token = jwt.sign(payload, "secret");
 
-              let payload = { id: foundUser.id };
-              token = jwt.sign(payload, "secret");
+          if (foundUser.user_role === role.ADMIN) {
+            const isVerified = await Admin.checkVerification(foundUser.user_id);
 
-              isUserExists = true;
-              msg = "Login Successfuly";
-              user = foundUser;
+            if (isVerified.is_verified) {
+              res.status(200).json({
+                error: false,
+                msg: "Login Successfuly",
+                user: {
+                  id: foundUser.user_id,
+                  name: foundUser.user_name,
+                  email: foundUser.user_email,
+                  role: foundUser.user_role,
+                },
+                token,
+              });
             } else {
-              msg = "Invalid Password";
+              res.status(401).json({
+                error: true,
+                msg: "Your account is not verified. Check your mail to verify your account",
+              });
             }
           } else {
-            msg = "User Not Found";
+            res.status(200).json({
+              error: false,
+              msg: "Login Successfuly",
+              user: foundUser,
+              token,
+            });
           }
-
-          break;
-        case userConstant.ADMIN:
-          let foundAdmin = await Admin.getAdminbyEmail(email);
-
-          if (foundAdmin) {
-            if (foundAdmin.user_status) {
-              const passwordMatch = await bcrypt.compare(
-                password,
-                foundAdmin.user_passward
-              );
-
-              if (passwordMatch) {
-                let payload = { id: foundAdmin.user_id };
-                token = jwt.sign(payload, "secret");
-
-                msg = "Login Successfuly";
-                user = foundAdmin;
-                isUserExists = true;
-              } else {
-                msg = "Invalid Password";
-              }
-            }
-            else {
-              msg = "Please verify your account form email to continue";
-            }
-          } else {
-            msg = "User Not Found";
-          }
-          break;
-        case userConstant.TEACHER:
-          let foundTeacher = await Teacher.getTeacherbyEmail(email);
-
-          if (foundTeacher) {
-            const passwordMatch = await bcrypt.compare(
-              password,
-              foundTeacher.teacher_password
-            );
-
-            if (passwordMatch) {
-              console.log(`user login ${foundTeacher}`);
-
-              let payload = { id: foundTeacher.id };
-              token = jwt.sign(payload, "secret");
-
-              isUserExists = true;
-              msg = "Login Successfuly";
-              user = foundTeacher;
-            } else {
-              msg = "Invalid Password";
-            }
-          } else {
-            msg = "User Not Found";
-          }
-          break;
-        case userConstant.PARENT:
-          let foundParent = await Parent.getParentbyEmail(email);
-
-          if (foundParent) {
-            const passwordMatch = await bcrypt.compare(
-              password,
-              foundParent.parent_password
-            );
-
-            if (passwordMatch) {
-              let payload = { id: foundParent.id };
-              token = jwt.sign(payload, "secret");
-
-              isUserExists = true;
-              msg = "Login Successfuly";
-              user = foundParent;
-            } else {
-              msg = "Invalid Password";
-            }
-          } else {
-            msg = "User Not Found";
-          }
-
-          break;
-        default:
-        // code block
-      }
-
-      if (isUserExists) {
-        res.status(201).json({
-          error: false,
-          msg,
-          user,
-          token,
-        });
+        } else {
+          res.status(401).json({
+            error: true,
+            msg: "Invalid Password",
+          });
+        }
       } else {
         res.status(401).json({
           error: true,
-          msg,
+          msg: "User Not Found",
         });
       }
     } catch (error) {
@@ -292,6 +236,32 @@ exports.loginUser = async (req, res) => {
       res.status(500).json({
         error: true,
         msg: "Server Error",
+      });
+    }
+  }
+};
+
+exports.addAdminPlan = async (req, res) => {
+  const { name, price, isActive } = req.body;
+
+  if (!name || !price || !isActive) {
+    res.status(404).json({
+      error: true,
+      msg: "Input not complete",
+    });
+  } else {
+    try {
+      const plan = await Plan.addPlan(name, price, isActive);
+
+      res.status(200).json({
+        error: false,
+        msg: "Plan added",
+        plan,
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: true,
+        msg: "Server error",
       });
     }
   }

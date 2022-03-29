@@ -1,25 +1,19 @@
 import React, { useState } from "react";
 
-import * as userConstant from "../App/Redux/constants/userConstant";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import Footer from "./LoginFooter/Footer";
 import Header from "./LoginHeader/Header";
-import { loginUser } from "../App/Redux/actions/userAction";
 
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
-
-import { createBrowserHistory } from "history";
+import { loginUser } from "../App/Redux/Action/userActions";
 
 import "./SignIn.css";
 
-const SignIn = ({ setUserType }) => {
-  const [email, setEmail] = useState("qwerfd");
-  const [password, setPassword] = useState("asdfssdf");
+const SignIn = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const [formError, setFormError] = useState("");
-  const [modalShow, setModalShow] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -27,77 +21,18 @@ const SignIn = ({ setUserType }) => {
     setFormError("");
   };
 
-  const isModalShow = async (e) => {
+  const handleLogin = async () => {
     if (email === "" || password === "") {
       setFormError("Please fill form complete");
     } else {
-      setModalShow(true);
+      dispatch(loginUser(email, password));
     }
-  };
-
-  const handleLogin = async (loginType) => {
-    // e.preventDefault();
-
-    setUserType(loginType);
-    setModalShow(false);
-
-    dispatch(loginUser(email, password, loginType));
-    
   };
 
   return (
     <div className="frm-clr">
       {/* Header */}
       <Header />
-
-      <Modal
-        show={modalShow}
-        onHide={() => setModalShow(false)}
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-      >
-        <Modal.Header className="justify-content-center">
-          <Modal.Title id="contained-modal-title-vcenter">Login As</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="d-flex flex-column btn-group-lg">
-          <Button
-            className="mt-1"
-            variant="secondary"
-            onClick={() => {
-              handleLogin(userConstant.ADMIN);
-            }}
-          >
-            Admin
-          </Button>
-          <Button
-            className="mt-3"
-            variant="primary"
-            onClick={() => {
-              handleLogin(userConstant.TEACHER);
-            }}
-          >
-            Teacher
-          </Button>
-          <Button
-            className="mt-3"
-            variant="success"
-            onClick={() => {
-              handleLogin(userConstant.STUDENT);
-            }}
-          >
-            Student
-          </Button>
-          <Button
-            className="mt-3"
-            variant="info"
-            onClick={() => {
-              handleLogin(userConstant.PARENT);
-            }}
-          >
-            Parent
-          </Button>
-        </Modal.Body>
-      </Modal>
 
       {/* <!-- Form--> */}
       <div className="form">
@@ -150,7 +85,7 @@ const SignIn = ({ setUserType }) => {
                 {formError}
               </span>
               <div className="form-group">
-                <button type="submit" onClick={isModalShow}>
+                <button type="submit" onClick={handleLogin}>
                   Log In
                 </button>
               </div>

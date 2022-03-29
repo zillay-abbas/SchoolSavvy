@@ -1,23 +1,18 @@
-import thunk from "redux-thunk";
-import { createStore, combineReducers, applyMiddleware } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
+import { configureStore } from "@reduxjs/toolkit";
 
 // Reducers
-import { userReducer } from "./reducers/userReducer";
+import userSlice from "./Slice/userSlice";
+import dashboardSlice from "./Slice/dashboardSlice";
+import schoolSlice from "./Slice/schoolSlice";
+import planSlice from "./Slice/planSlice";
 
-const reducer = combineReducers({
-  user: userReducer,
+const store = configureStore({
+  reducer: {
+    user: userSlice.reducer,
+    dashboard: dashboardSlice.reducer,
+    school: schoolSlice.reducer,
+    plan: planSlice.reducer,
+  },
 });
-
-const middleware = [thunk];
-
-const INITIAL_STATE = {
-};
-
-const store = createStore(
-  reducer,
-  INITIAL_STATE,
-  composeWithDevTools(applyMiddleware(...middleware))
-);
 
 export default store;

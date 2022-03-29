@@ -4,17 +4,25 @@ import App from "./App";
 import store from "./App/Redux/store";
 import { Provider } from "react-redux";
 import reportWebVitals from "./reportWebVitals";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
-// import './index.css';
+const stripePromise = loadStripe(process.env.REACT_APP_PUBLISHABLE_KEY);
+
+const options = {
+  clientSecret: process.env.SECRET_KEY,
+};
 
 ReactDOM.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <Provider store={store}>
-      <App />
-    </Provider>
-  </React.StrictMode>,
+      <Elements stripe={stripePromise} options={options}>
+        <App />
+      </Elements>
+    </Provider>,
+  // </React.StrictMode>,
   document.getElementById("root")
 );
 

@@ -46,6 +46,36 @@ class Plan {
       },
     });
   }
+
+  static async getPlanbyID(id) {
+    return await prisma.plan.findUnique({
+      where: {
+        plan_id: id,
+      }
+    })
+  }
+
+  static async getSubscriptionbyUserID(userID) {
+    return await prisma.user_subscription.findMany({
+      where: {
+        sb_user_id: userID,
+      }
+    })
+  }
+
+  static async updateSubscription(userId, planId, endTime) {
+    return await prisma.user_subscription.update({
+      where:{
+        sb_user_id: userId,
+      },
+      data: {
+        sb_plan_id: planId,
+        sb_start_time: new Date(),
+        sb_end_time: endTime,
+      }
+    })
+  }
+
 }
 
 module.exports = { Plan };

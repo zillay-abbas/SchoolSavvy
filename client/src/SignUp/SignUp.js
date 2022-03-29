@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import validator from "validator";
-import { createBrowserHistory } from "history";
 import { useNavigate } from "react-router-dom";
 
 import axios from "../App/axios.js";
@@ -23,7 +22,6 @@ const SignUp = () => {
 
   const [fillErr, setFillErr] = useState("");
   
-  const history = createBrowserHistory();
   let navigate = useNavigate();
 
   const validatePassword = (value) => {

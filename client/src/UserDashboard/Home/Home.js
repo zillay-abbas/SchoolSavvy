@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import Card from "../Card/Card";
@@ -6,16 +6,17 @@ import BarChart from "../Chart/BarChart";
 import NoticeBoard from "../NoticeBoard/NoticeBoard";
 import Calendar from "../EventCalendar/EventCalendar";
 
-import { loadDashboard } from "../../App/Redux/actions/userAction";
+import { loadDashboard } from "../../App/Redux/Action/dashboardActions";
 
 import "./Home.css";
 
 const Home = () => {
   const dispatch = useDispatch();
+  const { token } = useSelector((state) => state.user);
 
   useEffect(() => {
     console.log("home rend");
-    dispatch(loadDashboard());
+    dispatch(loadDashboard(token));
   }, []);
 
   return (

@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { Card, Nav } from "react-bootstrap";
 import { NavLink, Route, Routes, useNavigate } from "react-router-dom";
 
-import AddSchool from './AddScool/AddSchool';
+import AddSchool from "./AddScool/AddSchool";
 import ViewSchool from "./ViewSchool/ViewSchool";
 import SchoolPlan from "./SchoolPlan/SchoolPlan";
 
@@ -12,10 +12,10 @@ import "./SchoolComp.css";
 const SchoolComp = () => {
   let history = useNavigate();
 
-  useEffect(() => {  
-    history('view');
+  useEffect(() => {
+    history("view");
   }, []);
-  
+
   return (
     <div className="school_cont h-100">
       <Card className="h-100">
@@ -42,7 +42,7 @@ const SchoolComp = () => {
           <Routes>
             <Route path="/view" element={<ViewSchool />} />
             <Route path="/add" element={<AddSchool />} />
-            <Route path="/plan" element={<SchoolPlan/>} />
+            <Route path="/plan" element={<SchoolPlan />} />
           </Routes>
         </Card.Body>
       </Card>
