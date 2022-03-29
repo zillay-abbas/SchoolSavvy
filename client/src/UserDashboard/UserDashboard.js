@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-
 
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
@@ -10,26 +8,26 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Hamburger from "./Hamburger/Hamburger";
 import UserSidebar from "./Sidebar/Sidebar";
 import PathHeading from "./PathHeading/PathHeading";
+
 import Home from "./Home/Home";
 
 import SchoolComp from "./SchoolComp/SchoolComp";
-import { loadDashboard } from "../App/Redux/actions/userAction";
-
+import TeacherComp from "./TeacherComp/TeacherComp"
+import StudentComp from "./StudentComp/StudentComp";
+import ClassComp from "./ClassComp/ClassComp";
+import ExamsComp from "./Exams/ExamsComp";
 import "./UserDashboard.css";
 
 export const UserDashboard = () => {
   let history = useNavigate();
 
   const [isOpen, setOpen] = useState(true);
-  const dispatch = useDispatch();
 
   const onToggle = () => {
     setOpen(!isOpen);
   };
 
   useEffect(() => {
-    console.log("dashh rend");
-
     history("home");
   }, []);
 
@@ -68,14 +66,15 @@ export const UserDashboard = () => {
         <div className="dash-info">
           {/* Heading */}
           <PathHeading />
+
           <Routes>
             <Route path="/home" element={<Home />} />
             <Route path="/school/*" element={<SchoolComp />} />
-            <Route path="/student/*" element={<></>} />
+            <Route path="/student/*" element={<StudentComp />} />
             <Route path="/parent/*" element={<></>} />
-            <Route path="/teacher/*" element={<></>} />
-            <Route path="/class/*" element={<></>} />
-            <Route path="/exam/*" element={<></>} />
+            <Route path="/teacher/*" element={<TeacherComp />} />
+            <Route path="/class/*" element={<ClassComp />} />
+            <Route path="/exam/*" element={<ExamsComp/>} />
             <Route path="/attendance/*" element={<></>} />
             <Route path="/timetable/*" element={<></>} />
           </Routes>

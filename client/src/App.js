@@ -28,10 +28,9 @@ function App() {
   const { authToken, setAuthToken } = useToken();
   const [userType, setUserType] = useState();
 
-  const { token } = useSelector((state) => state.user);
+  const { token } = useSelector((state) => state.adminUser);
 
   useEffect(() => {
-    console.log("apppppp rend");
     if (token) {
       setAuthToken(token);
     }
@@ -55,7 +54,7 @@ function App() {
         <Route
           path="/login"
           element={
-            <LoginAuth redirectTo="/dashboard">
+            <LoginAuth redirectTo="/user/dashboard">
               <SignIn set_token={setAuthToken} setUserType={setUserType} />
             </LoginAuth>
           }
@@ -64,11 +63,11 @@ function App() {
         <Route path="/register" element={<SignUp />} />
 
         <Route
-          path="/dashboard/*"
+          path="/user/dashboard/*"
           element={
-            <RequireAuth redirectTo="/login">
+            // <RequireAuth redirectTo="/login">
               <UserDashboard />
-            </RequireAuth>
+            // </RequireAuth>
           }
         />
 

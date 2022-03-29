@@ -4,9 +4,6 @@ import { Card, Nav } from "react-bootstrap";
 import { NavLink, Route, Routes, useNavigate } from "react-router-dom";
 
 import AddSchool from './AddScool/AddSchool';
-import ViewSchool from "./ViewSchool/ViewSchool";
-import SchoolPlan from "./SchoolPlan/SchoolPlan";
-
 import "./SchoolComp.css";
 
 const SchoolComp = () => {
@@ -32,17 +29,17 @@ const SchoolComp = () => {
               </NavLink>
             </Nav.Item>
             <Nav.Item>
-              <NavLink to="plan" className="nav-link">
-                Upgrade School Plan
+              <NavLink to="remove" className="nav-link">
+                Remove School
               </NavLink>
             </Nav.Item>
           </Nav>
         </Card.Header>
         <Card.Body>
           <Routes>
-            <Route path="/view" element={<ViewSchool />} />
+            <Route path="/view" element={<>view</>} />
             <Route path="/add" element={<AddSchool />} />
-            <Route path="/plan" element={<SchoolPlan/>} />
+            <Route path="/remove" element={<>remove</>} />
           </Routes>
         </Card.Body>
       </Card>

@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import validator from "validator";
-import { createBrowserHistory } from "history";
-import { useNavigate } from "react-router-dom";
 
 import axios from "../App/axios.js";
 import Footer from "../SignIn/LoginFooter/Footer";
@@ -22,9 +20,6 @@ const SignUp = () => {
   const [emailError, setEmailError] = useState("");
 
   const [fillErr, setFillErr] = useState("");
-  
-  const history = createBrowserHistory();
-  let navigate = useNavigate();
 
   const validatePassword = (value) => {
     setPassword(value);
@@ -85,13 +80,11 @@ const SignUp = () => {
             alert(result.data.msg);
           } else {
             console.log(result.data);
-            // history.push("/login");
-            navigate("/login");
             alert(result.data.msg);
           }
         })
         .catch((error) => {
-          alert(`error ${error}`);
+          alert(`err0r ${error}`);
         });
     }
   };

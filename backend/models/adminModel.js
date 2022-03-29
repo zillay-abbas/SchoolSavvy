@@ -1,5 +1,7 @@
 const PrismaClient = require("@prisma/client");
-const prisma = new PrismaClient.PrismaClient();
+const prisma = new PrismaClient.PrismaClient({
+  rejectOnNotFound: false,
+});
 
 class Admin {
   static async addUser(name, email, password, status, isRemoved, configToken) {
@@ -18,23 +20,7 @@ class Admin {
   static async getAdminbyToken(token) {
     return await prisma.user.findUnique({
       where: {
-        user_verification: token,
-      },
-    });
-  }
-
-  static async getAdminbyEmail(email) {
-    return await prisma.user.findUnique({
-      where: {
-        user_email: email,
-      },
-    });
-  }
-
-  static async getAdminbyID (id) {
-    return await prisma.user.findUnique({
-      where: {
-        user_id: id,
+        user_verification: token
       },
     });
   }
@@ -46,20 +32,36 @@ class Admin {
       },
       data: {
         user_status: status,
+      }
+    })
+  }
+
+  static async getAdminbyEmail(email) {
+    return await prisma.user.findUnique({
+      where: {
+        user_email: email,
       },
     });
   }
 }
 
 class Student {
-  static async getAllStudents() {
-    return await prisma.school_student.findMany();
+  static async getStudents() {
+    return await prisma.student.findMany();
   }
 
   static async getStudentbyId(id) {
-    return await prisma.school_student.findUnique({
+    return await prisma.student.findUnique({
       where: {
         student_id: id,
+      },
+    });
+  }
+
+  static async checkStudentEmail(email) {
+    return await prisma.student.findMany({
+      where: {
+        email,
       },
     });
   }
@@ -67,16 +69,8 @@ class Student {
   static async getStudentbyEmail(email) {
     return await prisma.school_student.findUnique({
       where: {
-        student_email: email,
+        student_email: email
       },
-    });
-  }
-
-  static async getStudentsbySchool(schoolID) {
-    return await prisma.school_student.findMany({
-      where: {
-        student_school_id: schoolID
-      }
     });
   }
 
@@ -127,8 +121,8 @@ class Student {
 }
 
 class Teacher {
-  static async getAllTeachers() {
-    return await prisma.school_teacher.findMany();
+  static async getTeachers() {
+    return await prisma.teacher.findMany();
   }
 
   static async addTeacher(teacher) {
@@ -147,7 +141,7 @@ class Teacher {
   }
 
   static async getTeacherbyId(id) {
-    return await prisma.school_teacher.findUnique({
+    return await prisma.teacher.findUnique({
       where: {
         teacher_id: id,
       },
@@ -161,41 +155,17 @@ class Teacher {
       },
     });
   }
-
-  static async getTeachersbySchool(schoolID) {
-    return await prisma.school_teacher.findMany({
-      where: {
-        teacher_school_id: schoolID,
-      },
-    });
-  }
 }
 
 class Parent {
-  static async getAllParents() {
-    return await prisma.school_parent.findMany();
+  static async getParents() {
+    return await prisma.parent.findMany();
   }
 
   static async getParentbyEmail(email) {
     return await prisma.school_parent.findUnique({
       where: {
         parent_email: email,
-      },
-    });
-  }
-
-  static async getParentbyID(id) {
-    return await prisma.school_parent.findUnique({
-      where: {
-        parent_id: id,
-      },
-    });
-  }
-
-  static async getParentsbySchool(schoolID) {
-    return await prisma.school_parent.findMany({
-      where: {
-        parent_school_id: schoolID,
       },
     });
   }
