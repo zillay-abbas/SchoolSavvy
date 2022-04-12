@@ -1,22 +1,45 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import SideComp from "./SideComp/SideComp";
 import { useDispatch, useSelector } from "react-redux";
 
-import "./Sidebar.css";
 import { NavLink } from "react-router-dom";
+import * as role from "../../App/Redux/Constant/userConstant";
+
+import "./Sidebar.css";
 
 const UserSidebar = ({ is_Open, on_Toggle }) => {
   const sideDrawerClass = ["sidebar_left"];
   const dispatch = useDispatch();
 
-  const { detail } = useSelector(state => state.user);
+  const { detail } = useSelector((state) => state.user);
+
+  const [roles, setRole] = useState("");
 
   if (is_Open) {
     sideDrawerClass.push("show");
   }
+
+  useEffect(() => {
+    switch (detail.role) {
+      case role.ADMIN:
+        setRole("admin");
+        break;
+      case role.PARENT:
+        setRole("parent");
+        break;
+      case role.STUDENT:
+        setRole("student");
+        break;
+      case role.TEACHER:
+        setRole("teacher");
+        break;
+      default:
+        break;
+    }
+  }, []);
 
   return (
     <div className={sideDrawerClass.join(" ")}>
@@ -35,39 +58,47 @@ const UserSidebar = ({ is_Open, on_Toggle }) => {
           <ul className={is_Open ? "submenu" : "submenu p-none"}>
             {SideComp.map((component, index) => {
               return (
-                <li
-                  className="py_5"
-                  onClick={
-                    component.handleClick
-                      ? () => dispatch(component?.handleClick)
-                      : component?.handleClick
-                  }
-                  key={index}
-                >
-                  <NavLink
-                    to={component.to}
-                    className={({ isActive }) =>
-                      is_Open
-                        ? isActive
-                          ? "side_item item_active"
-                          : "side_item"
-                        : isActive
-                        ? "side_item_center item_active"
-                        : "t-black side_item_center"
-                    }
-                  >
-                    <component.icon
-                      className={
-                        is_Open ? "side__icon mx-4" : "side__icon_large"
+                <>
+                  {component.role[roles] ? (
+                    <li
+                      className="py_5"
+                      onClick={
+                        component.handleClick
+                          ? () => dispatch(component?.handleClick)
+                          : component?.handleClick
                       }
-                    />
-                    <span
-                      className={is_Open ? "show_item_name" : "item_name_none"}
+                      key={index}
                     >
-                      {component.name}
-                    </span>
-                  </NavLink>
-                </li>
+                      <NavLink
+                        to={component.to}
+                        className={({ isActive }) =>
+                          is_Open
+                            ? isActive
+                              ? "side_item item_active"
+                              : "side_item"
+                            : isActive
+                            ? "side_item_center item_active"
+                            : "t-black side_item_center"
+                        }
+                      >
+                        <component.icon
+                          className={
+                            is_Open ? "side__icon mx-4" : "side__icon_large"
+                          }
+                        />
+                        <span
+                          className={
+                            is_Open ? "show_item_name" : "item_name_none"
+                          }
+                        >
+                          {component.name}
+                        </span>
+                      </NavLink>
+                    </li>
+                  ) : (
+                    <></>
+                  )}
+                </>
               );
             })}
           </ul>

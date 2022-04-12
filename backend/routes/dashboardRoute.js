@@ -8,10 +8,6 @@ const {
   removeGrade,
   addCourse,
   removeCourse,
-  addStudent,
-  getStudent,
-  addTeacher,
-  getTeacher,
   createSchool,
   getUserbyToken,
   removeSchool,
@@ -31,9 +27,7 @@ router.route("/grade").post(addGrade).delete(removeGrade);
 
 router.route("/course").post(addCourse).delete(removeCourse);
 
-router.route("/student").post(addStudent).get(getStudent);
-
-router.route("/teacher").post(addTeacher).get(getTeacher);
+// router.route("/student").post(addStudent).get(getStudent);
 
 // //remaining
 // router.route("/create/class").post(createClass);

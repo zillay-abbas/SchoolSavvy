@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { Card, Nav } from "react-bootstrap";
 import { NavLink, Route, Routes, useNavigate } from "react-router-dom";
 
-import AddSchool from "./AddScool/AddSchool";
+import AddSchool from "./AddSchool/AddSchool";
 import ViewSchool from "./ViewSchool/ViewSchool";
 import SchoolPlan from "./SchoolPlan/SchoolPlan";
 

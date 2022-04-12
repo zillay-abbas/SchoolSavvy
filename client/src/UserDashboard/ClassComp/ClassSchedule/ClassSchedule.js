@@ -1,84 +1,64 @@
 import React, { useState } from "react";
 
-import { Button, Form, Row, Col} from "react-bootstrap";
+import {
+  Button,
+  Form,
+  Row,
+  Col,
+  InputGroup,
+  DropdownButton,
+  Dropdown,
+} from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { addClassTimeTable } from "../../../App/Redux/Action/classActions";
 
 function ClassSchedule() {
+  const { all } = useSelector((state) => state.class);
+  const { all: teachers } = useSelector((state) => state.teacher);
+  const { all: subjects } = useSelector((state) => state.subject);
+  const dispatch = useDispatch();
+
+  const [section, setSection] = useState("");
+  const [selectedClass, setSelectedClass] = useState("");
+  const [selectedTeacher, setSelectedTeacher] = useState("");
+  const [selectedSubject, setSelectedSubject] = useState("");
+  const [selectedDay, setSelectedDay] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+
+  const [classErr, setClassErr] = useState("");
+  const [teacherErr, setTeacherErr] = useState("");
+
   const [validated, setValidated] = useState(false);
 
   const handleSubmit = (event) => {
+    event.preventDefault();
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
-      event.preventDefault();
       event.stopPropagation();
+      setValidated(true);
     }
-
-    setValidated(true);
+    if (section !== "" && selectedClass !== "") {
+      setValidated(true);
+      dispatch(
+        addClassTimeTable(
+          selectedClass.class_id,
+          section.section_id,
+          selectedTeacher.teacher_id,
+          selectedSubject.course_id,
+          selectedDay,
+          selectedTime,
+          endTime
+        )
+      );
+    } else {
+      setClassErr("Please enter class and section");
+    }
   };
 
   return (
-    <Form noValidate validated={validated} onSubmit={handleSubmit}>
-      <Row className="mb-4">
-        <Form.Group as={Col} md="4" controlId="validationCustom01">
-          <Form.Label>Teacher</Form.Label>
-          <Form.Control
-            required
-            type="text"
-            placeholder=""
-          />
-          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group as={Col} md="4" controlId="validationCustom01">
-          <Form.Label>Subject</Form.Label>
-          <Form.Control
-            required
-            type="text"
-            placeholder=""
-
-          />
-          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group as={Col} md="4" controlId="validationCustom02">
-          <Form.Label>Class</Form.Label>
-          <Form.Control
-            required
-            type="text"
-            placeholder=""
-          />
-          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-        </Form.Group>
-        </Row>
-        <Row className="mb-4">
-        <Form.Group as={Col} md="4" controlId="validationCustom02">
-          <Form.Label>Section</Form.Label>
-          <Form.Control
-            required
-            type="text"
-            placeholder=""
-          />
-          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group as={Col} md="4" controlId="validationCustom03">
-          <Form.Label>Date</Form.Label>
-          <Form.Control
-              type="date"
-              placeholder=""
-              aria-describedby="inputGroupPrepend"
-              required
-            />
-        </Form.Group>
-        <Form.Group as={Col} md="4" controlId="validationCustom03">
-          <Form.Label>Time</Form.Label>
-          <Form.Control
-              type="Time"
-              placeholder=""
-              aria-describedby="inputGroupPrepend"
-              required
-            />
-        </Form.Group>
-        </Row>
-      <Button type="submit">Add</Button>
-    </Form>
-   
+    <>
+    </>
   );
 }
 

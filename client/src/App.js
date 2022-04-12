@@ -62,7 +62,7 @@ function App() {
           path="/dashboard/*"
           element={
             <RequireAuth redirectTo="/login">
-              <UserDashboard></UserDashboard>
+              <UserDashboard />
             </RequireAuth>
           }
         />

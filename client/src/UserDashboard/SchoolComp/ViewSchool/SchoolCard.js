@@ -95,7 +95,7 @@ const SchoolCard = () => {
               <div className="school_opt">
                 <Button
                   variant="primary"
-                  disabled={school.id === item.school_id ? true : false}
+                  disabled={school?.id === item?.school_id ? true : false}
                   onClick={() => handleActive(item.school_id)}
                 >
                   Active

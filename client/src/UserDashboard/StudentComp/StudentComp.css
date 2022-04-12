@@ -1,4 +1,5 @@
 
 .student_cont {
     margin-top: -5px;
+    min-height: 100% !important;
 }

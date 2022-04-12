@@ -13,17 +13,22 @@ import PathHeading from "./PathHeading/PathHeading";
 import Home from "./Home/Home";
 
 import SchoolComp from "./SchoolComp/SchoolComp";
-import TeacherComp from './TeacherComp/TeacherComp';
+import TeacherComp from "./TeacherComp/TeacherComp";
 import ClassComp from "./ClassComp/ClassComp";
 import ExamsComp from "./ExamsComp/ExamsComp";
+import Parent from "./ParentComp/Parent";
+
+import * as role from "../App/Redux/Constant/userConstant";
 
 import StudentComp from "./StudentComp/StudentComp";
 import "./UserDashboard.css";
+import Attendence from "./AttendenceComp/Attendence";
+import Routine from "./RoutineComp/Routine";
 
 export const UserDashboard = () => {
   let history = useNavigate();
   const dispatch = useDispatch();
-  const { token } = useSelector((state) => state.user);
+  const { token, detail } = useSelector((state) => state.user);
 
   const [isOpen, setOpen] = useState(true);
 
@@ -34,7 +39,9 @@ export const UserDashboard = () => {
   useEffect(() => {
     console.log("dashh rend");
     dispatch(loadDashboard(token));
-    history("home");
+    if (detail.role === role.ADMIN) {
+      history("home");
+    }
   }, []);
 
   return (
@@ -76,12 +83,12 @@ export const UserDashboard = () => {
             <Route path="/home" element={<Home />} />
             <Route path="/school/*" element={<SchoolComp />} />
             <Route path="/student/*" element={<StudentComp />} />
-            <Route path="/parent/*" element={<></>} />
+            <Route path="/parent/*" element={<Parent />} />
             <Route path="/teacher/*" element={<TeacherComp />} />
             <Route path="/class/*" element={<ClassComp />} />
             <Route path="/exam/*" element={<ExamsComp />} />
-            <Route path="/attendance/*" element={<></>} />
-            <Route path="/timetable/*" element={<></>} />
+            <Route path="/attendance/*" element={<Attendence />} />
+            {/* <Route path="/timetable/*" element={<Routine />} /> */}
           </Routes>
         </div>
       </div>

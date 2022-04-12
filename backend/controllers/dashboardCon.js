@@ -1,58 +1,96 @@
-const PrismaClient = require("@prisma/client");
-const prisma = new PrismaClient.PrismaClient();
 const bcrypt = require("bcrypt");
 
 const { School } = require("../models/schoolModel");
-const { Subject } = require("../models/acadamicModel");
-const {
-  Student,
-  Parent,
-  Teacher,
-  User,
-  Admin,
-} = require("../models/userModel");
+const { Subject } = require("../models/subjectModel");
+const { Student } = require("../models/studentModel");
+const { Teacher } = require("../models/teacherModel");
+const { Parent, User, Admin } = require("../models/userModel");
+
+const role = require("../constant/roles");
 
 exports.getDashboardDetails = async (req, res) => {
   const userID = req.user.user_id;
 
   try {
-    const schoolID = await School.getActiveSchoolbyUserID(userID);
-    const school = await School.getSchoolbySchoolID(schoolID.admin_school_id);
+    const chkUser = await User.getUserbyID(userID);
 
-    if (school) {
-      const student = await Student.getStudentsbySchool(school.school_id);
+    if (chkUser.user_role === role.ADMIN) {
+      const schoolID = await School.getActiveSchoolbyUserID(userID);
+      const school = await School.getSchoolbySchoolID(schoolID.admin_school_id);
 
-      const parent = await Parent.getParentsbySchool(school.school_id);
+      if (school) {
+        const student = await Student.getStudentsbySchool(school.school_id);
 
-      const teacher = await Teacher.getTeachersbySchool(school.school_id);
+        const parent = await Parent.getParentsbySchool(school.school_id);
 
-      const subject = await Subject.getSubjectsbySchoolID(school.school_id);
+        const teacher = await Teacher.getTeachersbySchool(school.school_id);
 
-      const presentStudent = await Student.getPresentStudents(school.school_id);
+        const subject = await Subject.getSubjectsbySchoolID(school.school_id);
 
-      const absentStudent = await Student.getAbsentStudents(school.school_id);
+        const presentStudent = await Student.getPresentStudents(
+          school.school_id
+        );
 
-      res.status(200).json({
-        error: false,
-        school: {
-          id: school[0].school_id,
-          name: school[0].school_name,
-          description: school[0].school_desc,
-          email: school[0].school_email,
-          userID: school[0].school_user_id,
-        },
-        student,
-        parent,
-        teacher,
-        subject,
-        presentStudent,
-        absentStudent,
-      });
+        const absentStudent = await Student.getAbsentStudents(school.school_id);
+
+        res.status(200).json({
+          error: false,
+          school: {
+            id: school[0].school_id,
+            name: school[0].school_name,
+            description: school[0].school_desc,
+            email: school[0].school_email,
+            userID: school[0].school_user_id,
+          },
+          student,
+          parent,
+          teacher,
+          subject,
+          presentStudent,
+          absentStudent,
+        });
+      } else {
+        res.status(400).json({
+          error: true,
+          msg: "No school found",
+        });
+      }
     } else {
-      res.status(400).json({
-        error: true,
-        msg: "No school found",
-      });
+      let schId;
+      switch (chkUser.user_role) {
+        case role.STUDENT:
+          schId = await Student.getStudentbyUserId(chkUser.user_id);
+          break;
+        case role.TEACHER:
+          schId = await Teacher.getTeacherbyUserId(chkUser.user_id);
+          break;
+        case role.PARENT:
+          schId = await Parent.getParentbyUserID(chkUser.user_id);
+          break;
+
+        default:
+          break;
+      }
+
+      const school = await School.getSchoolbySchoolID(schId[0].school_id);
+
+      if (school) {
+        res.status(200).json({
+          error: false,
+          school: {
+            id: school[0].school_id,
+            name: school[0].school_name,
+            description: school[0].school_desc,
+            email: school[0].school_email,
+            userID: school[0].school_user_id,
+          },
+        });
+      } else {
+        res.status(400).json({
+          error: true,
+          msg: "No school found",
+        });
+      }
     }
   } catch (error) {
     console.log(error);
@@ -195,7 +233,6 @@ exports.getSchool = async (req, res) => {
 
 exports.removeSchool = async (req, res) => {
   const { schoolID } = req.body;
-  console.log(schoolID);
 
   try {
     const school = await School.removeSchool(schoolID);
@@ -257,7 +294,9 @@ exports.setSchoolActive = async (req, res) => {
   } else {
     try {
       const setActiveSchool = await School.setActiveSchool(userID, schoolID);
-      const getActiveSchool = await School.getSchoolbySchoolID(setActiveSchool.admin_school_id);
+      const getActiveSchool = await School.getSchoolbySchoolID(
+        setActiveSchool.admin_school_id
+      );
 
       res.status(200).json({
         error: false,
@@ -425,149 +464,4 @@ exports.removeCourse = async (req, res) => {
     }
   }
   //check if match
-};
-
-exports.addStudent = async (req, res) => {
-  const { name, dob, phone, join_date, email, password, class_id, parent_id } =
-    req.body;
-
-  let error = [];
-  // Validation checking
-
-  if (
-    !name ||
-    !dob ||
-    !phone ||
-    !join_date ||
-    !email ||
-    !password ||
-    !class_id ||
-    !parent_id
-  ) {
-    error.push({ msg: "Please fill in all fields" });
-  }
-
-  if (error.length > 0) {
-    res.status(400).json({
-      error: error,
-    });
-  } else {
-    const checkEmail = await Student.checkStudentEmail(email);
-
-    console.log(checkEmail);
-
-    if (!checkEmail) {
-      try {
-        let hashPassword = await bcrypt.hash(password, 10);
-        const student = {
-          name,
-          dob,
-          phone,
-          join_date,
-          email,
-          hashPassword,
-          class_id,
-          parent_id,
-        };
-        const result = await Student.addStudent(student);
-        res.status(200).json({
-          msg: "Student Added",
-          result,
-        });
-      } catch (error) {
-        console.log(`errror : ${error}`);
-
-        res.status(500).json({
-          error: "Server Error",
-        });
-      }
-    } else {
-      res.status(403).json({
-        msg: "User with this email alreay exists",
-      });
-    }
-  }
-};
-
-exports.getStudent = async (req, res) => {
-  const { id } = req.query.id;
-
-  if (!id) {
-    res.status(400).json({
-      msg: "Enter Student ID to Search",
-    });
-  } else {
-    try {
-      const student = await Student.getStudentbyId(id);
-
-      res.status(200).json({
-        Student: student,
-      });
-    } catch (error) {
-      res.status(500).json({
-        msg: "Server Error",
-      });
-    }
-  }
-};
-
-exports.addTeacher = async (req, res) => {
-  const { name, dob, phone, email, password } = req.body;
-
-  let error = [];
-  // Validation checking
-
-  if (!name || !dob || !phone || !email || !password) {
-    error.push({ msg: "Please fill in all fields" });
-  }
-
-  if (error.length > 0) {
-    res.status(400).json({
-      error: error,
-    });
-  } else {
-    try {
-      let hashPassword = await bcrypt.hash(password, 10);
-      const teacher = {
-        name,
-        dob,
-        phone,
-        email,
-        hashPassword,
-      };
-      const result = await Teacher.addTeacher(teacher);
-      res.status(200).json({
-        msg: "Teacher Added",
-        result,
-      });
-    } catch (error) {
-      console.log(`errror : ${error}`);
-
-      res.status(500).json({
-        error: "Server Error",
-      });
-    }
-  }
-};
-
-exports.getTeacher = async (req, res) => {
-  const { id } = req.query.id;
-
-  if (!id) {
-    res.status(400).json({
-      msg: "Enter Teacher ID to Search",
-    });
-  } else {
-    try {
-      const teacher = await Teacher.getTeacherbyId(id);
-
-      res.status(200).json({
-        Teacher: teacher,
-      });
-    } catch (error) {
-      res.status(500).json({
-        msg: "Server Error",
-      });
-    }
-  }
 };

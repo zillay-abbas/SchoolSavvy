@@ -111,6 +111,7 @@ function AddSchool() {
               role="status"
               aria-hidden="true"
             />
+             &#160;
             Loading...
           </>
         ) : (

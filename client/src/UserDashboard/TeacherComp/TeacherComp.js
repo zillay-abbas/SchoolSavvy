@@ -11,19 +11,23 @@ import PostAssignment from "./PostAssignment/PostAssignment";
 
 
 import "./TeacherComp.css";
+import { useDispatch } from "react-redux";
+import { loadTeachers } from "../../App/Redux/Action/teacherActions";
 
 const TeacherComp = () => {
   let history = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {  
-    history('view');
+    history('add');
+    dispatch(loadTeachers());
   }, []);
   
   return (
-    <div className="teacher_cont h-100">
-      <Card className="h-100">
+    <div className="teacher_cont">
+      <Card >
         <Card.Header>
-          <Nav variant="tabs" defaultActiveKey="/view">
+          <Nav variant="tabs" defaultActiveKey="/add">
             <Nav.Item>
               <NavLink to="add" className="nav-link">
                 Add New Teacher

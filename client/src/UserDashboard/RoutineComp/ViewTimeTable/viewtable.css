@@ -1,0 +1,10 @@
+.table-lable{
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 1rem;
+    margin-bottom: 0;
+}
+.checkbox{
+    margin-left: -20px;
+    padding-right: 20px;
+}

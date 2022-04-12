@@ -1,0 +1,15 @@
+.table-lable{
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 1rem;
+    margin-bottom: 0;
+}
+.container-visibile.dbtn{
+    padding-right: 20px;
+}
+.container-visibile.ubtn{
+    padding-right: 20px;
+    margin-left: 50px;
+    
+
+}

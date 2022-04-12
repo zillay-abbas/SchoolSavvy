@@ -59,7 +59,7 @@ export const removeSchool = (schoolID) => {
       dispatch(schoolActions.schoolRemoveSuccess(data));
     } catch (err) {
       console.log(err);
-      dispatch(schoolActions.schoolCreateFailure(err));
+      dispatch(schoolActions.schoolRemoveFailure(err));
     }
   };
 };

@@ -1,6 +1,6 @@
 .frm-clr {
   background: #80d7f1;
-  height: 100%;
+  min-height: 100vh;
 }
 .form {
   z-index: 15;

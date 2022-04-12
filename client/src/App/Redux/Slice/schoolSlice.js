@@ -53,9 +53,6 @@ const schoolSlice = createSlice({
       state.isDialog = action.payload.isDialog;
       state.msg = action.payload.msg;
       state.all = state.all.filter((school) => school.school_id !== action.payload.school.school_id);
-      if(state.all.length === 0){
-
-      }
     },
     schoolRemoveFailure: (state, action) => {
       state.loading = false;

@@ -1,64 +1,63 @@
-import React, { useEffect , useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Card, Nav } from "react-bootstrap";
 import { NavLink, Route, Routes, useNavigate } from "react-router-dom";
 
-import { Button, Form, Row, Col , Table, Modal, InputGroup } from "react-bootstrap";
-
-import AddClass from "./AddClass/AddClass"
-import AllClassSchedule from "./AllClassSchedule/AllClassSchedule"
+import AddClass from "./AddClass/AddClass";
+import AllClassSchedule from "./AllClassSchedule/AllClassSchedule";
 import ClassAssignment from "./ClassAssignment/ClassAssignment";
 import ClassSchedule from "./ClassSchedule/ClassSchedule";
+import Subject from "./Subject/Subject";
+
+import { useDispatch } from "react-redux";
+import { loadSchoolClasses } from "../../App/Redux/Action/classActions";
 // import "./ClassComp.css";
 
 const ClassComp = () => {
   let history = useNavigate();
-
-  useEffect(() => {  
-    history('');
+  const dispatch = useDispatch();
+  
+  useEffect(() => {
+    dispatch(loadSchoolClasses());
+    history("add");
   }, []);
 
-   
   return (
     <div className="Class_cont h-100">
-      <Card className="h-100">
+      <Card>
         <Card.Header>
-          <Nav variant="tabs" defaultActiveKey="/view">
+          <Nav variant="tabs" defaultActiveKey="/add">
             <Nav.Item>
               <NavLink to="add" className="nav-link">
-                Add New Class
+                Class Details
               </NavLink>
             </Nav.Item>
             <Nav.Item>
               <NavLink to="allClassSchedule" className="nav-link">
-                All Classes Schedule
+                Class Schedule
               </NavLink>
             </Nav.Item>
             <Nav.Item>
-              <NavLink to="classSchedule" className="nav-link">
-                 Class Schedule
+              <NavLink to="subject" className="nav-link">
+                Create Subject
               </NavLink>
             </Nav.Item>
             <Nav.Item>
               <NavLink to="assignment" className="nav-link">
-                 Class Assigment
+                Class Assigment
               </NavLink>
             </Nav.Item>
           </Nav>
         </Card.Header>
         <Card.Body>
           <Routes>
-            <Route path="/view" element={<>view</>} />
             <Route path="/add" element={<AddClass />} />
-            <Route path="/allClassSchedule" element={<AllClassSchedule/>} />
-            <Route path="/classSchedule" element={<ClassSchedule/>} />
-            <Route path="/assignment" element={<ClassAssignment/>} />
+            <Route path="/allClassSchedule" element={<AllClassSchedule />} />
+            <Route path="/subject" element={<Subject />} />
+            <Route path="/assignment" element={<ClassAssignment />} />
           </Routes>
         </Card.Body>
       </Card>
-
-
-
     </div>
   );
 };

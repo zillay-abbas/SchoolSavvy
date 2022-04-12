@@ -1,3 +1,22 @@
-.a_class-button{
-    margin: 0 1rem;
+.a_class-button {
+  margin: 0 1rem;
+}
+
+.year-picker {
+  width: 100%;
+  line-height: 2.5;
+}
+
+.dropdown-menu {
+  height: 70px !important;
+  overflow-y: scroll !important;
+}
+
+.btn_row {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn_form {
+  margin: 0 8px;
 }

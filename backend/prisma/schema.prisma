@@ -23,33 +23,36 @@ model school_attendence {
 
 model school_class_room {
   class_id         Int                @id @default(autoincrement())
+  cl_name          String             @db.VarChar(45)
+  cl_description   String?            @db.VarChar(45)
   cl_batch_year    Int                @db.Year
-  cl_grade_id      Int
-  cl_section       String             @db.Char(2)
   cl_status        Boolean?
   cl_remarks       String?            @db.VarChar(45)
-  cl_teacher_id    Int
+  cl_teacher_id    Int?
   cl_school_id     Int
-  school_grade     school_grade       @relation(fields: [cl_grade_id], references: [grade_id], onDelete: NoAction, onUpdate: NoAction, map: "class_grade")
   user_school      user_school        @relation(fields: [cl_school_id], references: [school_id], onDelete: NoAction, onUpdate: NoAction, map: "class_school")
+  school_teacher   school_teacher?    @relation(fields: [cl_teacher_id], references: [teacher_id], onDelete: NoAction, onUpdate: NoAction, map: "class_teacher")
+  class_section    class_section[]
+  school_course    school_course[]
+  school_student   school_student[]
   school_timetable school_timetable[]
 
-  @@index([cl_grade_id], map: "class_grade_idx")
   @@index([cl_school_id], map: "class_school_idx")
+  @@index([cl_teacher_id], map: "class_teacher_idx")
 }
 
 model school_course {
   course_id          Int                  @id @default(autoincrement())
   course_name        String               @db.VarChar(45)
   course_desription  String               @db.VarChar(45)
-  course_grade_id    Int
   course_school_id   Int
-  school_grade       school_grade         @relation(fields: [course_grade_id], references: [grade_id], onDelete: NoAction, onUpdate: NoAction, map: "course_grade")
+  class_id           Int
+  school_class_room  school_class_room    @relation(fields: [class_id], references: [class_id], onDelete: Cascade, onUpdate: NoAction, map: "course_class_link")
   user_school        user_school          @relation(fields: [course_school_id], references: [school_id], onDelete: NoAction, onUpdate: NoAction, map: "course_school")
   school_exam_result school_exam_result[]
   school_timetable   school_timetable[]
 
-  @@index([course_grade_id], map: "course_grade_idx")
+  @@index([class_id], map: "course_class_idx")
   @@index([course_school_id], map: "grade_school_idx")
 }
 
@@ -96,63 +99,61 @@ model school_exam_type {
   @@index([examt_school_id], map: "examt_school_idx")
 }
 
-model school_grade {
-  grade_id          Int                 @id @default(autoincrement())
-  grade_name        String              @unique(map: "name") @db.VarChar(45)
-  grade_descripton  String?             @db.VarChar(45)
-  grade_school_id   Int
-  user_school       user_school         @relation(fields: [grade_school_id], references: [school_id], onDelete: NoAction, onUpdate: NoAction, map: "grade_school")
-  school_class_room school_class_room[]
-  school_course     school_course[]
-
-  @@index([grade_school_id], map: "grade_school_idx")
-}
-
 model school_parent {
-  parent_id        Int              @id @default(autoincrement())
-  parent_phone     String           @db.VarChar(15)
-  parent_status    Boolean?
-  parent_school_id Int
-  parent_user_id   Int
-  user_school      user_school      @relation(fields: [parent_school_id], references: [school_id], onDelete: NoAction, onUpdate: NoAction, map: "parent_school")
-  user             user             @relation(fields: [parent_user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "parent_user")
-  school_student   school_student[]
+  parent_id      Int              @id @default(autoincrement())
+  parent_phone   String           @db.VarChar(15)
+  parent_status  Boolean?
+  school_id      Int
+  user_id        Int              @unique(map: "user_id_UNIQUE")
+  user_school    user_school      @relation(fields: [school_id], references: [school_id], onDelete: NoAction, onUpdate: NoAction, map: "parent_school")
+  user           user             @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "parent_user")
+  school_student school_student[]
 
-  @@index([parent_school_id], map: "parent_school_idx")
-  @@index([parent_user_id], map: "parent_user_idx")
+  @@index([school_id], map: "parent_school_idx")
+  @@index([user_id], map: "parent_user_idx")
 }
 
 model school_student {
   student_id         Int                  @id @default(autoincrement())
+  student_reg_no     String               @unique(map: "school_reg_no_UNIQUE") @db.VarChar(45)
   student_dob        DateTime             @db.Date
   student_join_date  DateTime             @db.Date
   student_status     Boolean?
-  student_parent_id  Int
+  student_parent_id  Int?
   student_class_id   Int?
-  student_school_id  Int
-  student_user_id    Int
-  school_parent      school_parent        @relation(fields: [student_parent_id], references: [parent_id], onDelete: NoAction, onUpdate: NoAction, map: "student_parent")
-  user_school        user_school          @relation(fields: [student_school_id], references: [school_id], onDelete: NoAction, onUpdate: NoAction, map: "student_school")
-  user               user                 @relation(fields: [student_user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "student_user")
+  school_id          Int
+  user_id            Int
+  student_section_id Int
+  user_school        user_school          @relation(fields: [school_id], references: [school_id], onDelete: Cascade, onUpdate: NoAction, map: "student_school")
+  school_class_room  school_class_room?   @relation(fields: [student_class_id], references: [class_id], onDelete: Cascade, onUpdate: NoAction, map: "student_class")
+  school_parent      school_parent?       @relation(fields: [student_parent_id], references: [parent_id], onDelete: NoAction, onUpdate: NoAction, map: "student_parent")
+  class_section      class_section        @relation(fields: [student_section_id], references: [section_id], onDelete: Cascade, onUpdate: NoAction, map: "student_section")
+  user               user                 @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "student_user")
   school_attendence  school_attendence[]
   school_exam_result school_exam_result[]
 
+  @@index([student_class_id], map: "student_class_idx")
   @@index([student_parent_id], map: "student_parent_idx")
-  @@index([student_school_id], map: "student_school_idx")
-  @@index([student_user_id], map: "student_user_idx")
+  @@index([school_id], map: "student_school_idx")
+  @@index([student_section_id], map: "student_section_idx")
+  @@index([user_id], map: "student_user_idx")
 }
 
 model school_teacher {
-  teacher_id        Int         @id @default(autoincrement())
-  teacher_phone     String      @db.VarChar(15)
-  tacher_status     Boolean?
-  teacher_school_id Int
-  teacher_user_id   Int
-  user_school       user_school @relation(fields: [teacher_school_id], references: [school_id], onDelete: NoAction, onUpdate: NoAction, map: "teacher_school_link")
-  user              user        @relation(fields: [teacher_user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "teacher_user")
+  teacher_id        Int                 @id @default(autoincrement())
+  teacher_phone     String              @db.VarChar(15)
+  city              String              @db.VarChar(45)
+  description       String?             @db.MediumText
+  teacher_status    Boolean?
+  school_id         Int
+  user_id           Int
+  user_school       user_school         @relation(fields: [school_id], references: [school_id], onDelete: NoAction, onUpdate: NoAction, map: "teacher_school_link")
+  user              user                @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "teacher_user")
+  school_class_room school_class_room[]
+  school_timetable  school_timetable[]
 
-  @@index([teacher_school_id], map: "teacher_school_idx")
-  @@index([teacher_user_id], map: "teacher_user_idx")
+  @@index([school_id], map: "teacher_school_idx")
+  @@index([user_id], map: "teacher_user_idx")
 }
 
 model user {
@@ -164,7 +165,7 @@ model user {
   user_is_removed      Int                    @db.TinyInt
   user_role            Int
   admin_user           admin_user?
-  school_parent        school_parent[]
+  school_parent        school_parent?
   school_student       school_student[]
   school_teacher       school_teacher[]
   user_package_payment user_package_payment[]
@@ -202,7 +203,6 @@ model user_school {
   school_exam        school_exam[]
   school_exam_result school_exam_result[]
   school_exam_type   school_exam_type[]
-  school_grade       school_grade[]
   school_parent      school_parent[]
   school_student     school_student[]
   school_teacher     school_teacher[]
@@ -217,15 +217,22 @@ model school_timetable {
   tt_time_start     DateTime          @db.Time(0)
   tt_time_end       DateTime          @db.Time(0)
   tt_subject_id     Int
+  tt_section_id     Int
   tt_class_id       Int
   tt_school_id      Int
+  tt_teacher_id     Int?
+  tt_class_link     String?           @db.VarChar(70)
   school_class_room school_class_room @relation(fields: [tt_class_id], references: [class_id], onDelete: NoAction, onUpdate: NoAction, map: "timetable_class")
   user_school       user_school       @relation(fields: [tt_school_id], references: [school_id], onDelete: NoAction, onUpdate: NoAction, map: "timetable_school")
+  class_section     class_section     @relation(fields: [tt_section_id], references: [section_id], onDelete: NoAction, onUpdate: NoAction, map: "timetable_section")
   school_course     school_course     @relation(fields: [tt_subject_id], references: [course_id], onDelete: NoAction, onUpdate: NoAction, map: "timetable_course")
+  school_teacher    school_teacher?   @relation(fields: [tt_teacher_id], references: [teacher_id], onDelete: NoAction, onUpdate: NoAction, map: "timetable_teacher")
 
   @@index([tt_class_id], map: "timetable_class_idx")
   @@index([tt_subject_id], map: "timetable_course_idx")
   @@index([tt_school_id], map: "timetable_school_idx")
+  @@index([tt_section_id], map: "timetable_section_idx")
+  @@index([tt_teacher_id], map: "timetable_teacher_idx")
 }
 
 model plan {
@@ -268,4 +275,15 @@ model admin_user {
 
   @@index([admin_school_id], map: "admin_school_idx")
   @@index([admin_user_id], map: "admin_user_idx")
+}
+
+model class_section {
+  section_id        Int                @id @default(autoincrement())
+  section_name      String             @db.VarChar(45)
+  section_class_id  Int
+  school_class_room school_class_room  @relation(fields: [section_class_id], references: [class_id], onDelete: NoAction, onUpdate: NoAction, map: "section_classs")
+  school_student    school_student[]
+  school_timetable  school_timetable[]
+
+  @@index([section_class_id], map: "section_classs_idx")
 }

@@ -6,6 +6,7 @@ var passwordValidator = require("password-validator");
 const sendEmail = require("../middlewares/eMail");
 const userConstant = require("../constant/userConstant");
 const role = require("../constant/roles");
+const { Admin, User } = require("../models/userModel");
 
 var schema = new passwordValidator();
 schema
@@ -19,34 +20,26 @@ schema
   .not()
   .spaces();
 
-const {
-  Admin,
-  Student,
-  Parent,
-  Teacher,
-  User,
-} = require("../models/userModel");
-
 exports.registerUser = async (req, res) => {
   // Get form request
   const { name, email, password, password2 } = req.body;
 
   // Validation checking
   if (!name || !email || !password || !password2) {
-    res.status(200).json({
+    res.status(400).json({
       error: true,
       msg: "Please fill all fields",
     });
   } else {
     //check if match
     if (password !== password2) {
-      res.status(200).json({
+      res.status(400).json({
         error: true,
         msg: "Password does not matches",
       });
     } else {
       if (!validator.validate(email) && !schema.validate(password)) {
-        res.status(200).json({
+        res.status(400).json({
           error: true,
           msg: "Input not correct",
         });
@@ -55,7 +48,7 @@ exports.registerUser = async (req, res) => {
           const user = await User.getUserbyEmail(email);
           // if same email already exists
           if (user) {
-            res.status(200).json({
+            res.status(400).json({
               error: true,
               msg: "User with this email already exists",
             });
@@ -64,7 +57,7 @@ exports.registerUser = async (req, res) => {
             const status = (isRemoved = 0);
             let date = new Date();
             let endDate = new Date();
-            
+
             const token = jwt.sign({ email: email }, secret);
 
             const mailVerification = await sendEmail(
@@ -215,7 +208,12 @@ exports.loginUser = async (req, res) => {
             res.status(200).json({
               error: false,
               msg: "Login Successfuly",
-              user: foundUser,
+              user: {
+                id: foundUser.user_id,
+                name: foundUser.user_name,
+                email: foundUser.user_email,
+                role: foundUser.user_role,
+              },
               token,
             });
           }
