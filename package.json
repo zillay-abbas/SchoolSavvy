@@ -1,0 +1,93 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.8.2",
+    "@emotion/styled": "^11.8.1",
+    "@fortawesome/fontawesome": "^1.1.8",
+    "@fortawesome/fontawesome-free-regular": "^5.0.13",
+    "@fortawesome/fontawesome-free-solid": "^5.0.13",
+    "@fortawesome/fontawesome-svg-core": "^1.3.0",
+    "@fortawesome/free-regular-svg-icons": "^5.15.4",
+    "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/react-fontawesome": "^0.1.17",
+    "@fullcalendar/core": "^5.10.1",
+    "@fullcalendar/daygrid": "^5.10.1",
+    "@fullcalendar/list": "^5.10.1",
+    "@fullcalendar/react": "^5.10.1",
+    "@fullcalendar/timegrid": "^5.10.1",
+    "@mui/icons-material": "^5.4.4",
+    "@mui/material": "^5.5.3",
+    "@reduxjs/toolkit": "^1.8.0",
+    "@stripe/react-stripe-js": "^1.7.0",
+    "@stripe/stripe-js": "^1.25.0",
+    "@testing-library/jest-dom": "^5.15.1",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/user-event": "^12.8.3",
+    "@zoomus/websdk": "^2.3.5",
+    "apexcharts": "^3.33.2",
+    "axios": "^0.24.0",
+    "babel-preset-react": "^6.24.1",
+    "bootstrap": "^5.1.3",
+    "chart.js": "^3.7.1",
+    "currency-formatter": "^1.5.9",
+    "fullcalendar": "^5.10.2",
+    "hamburger-react": "^2.4.1",
+    "js-file-download": "^0.4.12",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.5.25",
+    "moment": "^2.29.3",
+    "react": "^17.0.2",
+    "react-apexcharts": "^1.3.9",
+    "react-big-calendar": "^0.39.0",
+    "react-bootstrap": "^2.2.1",
+    "react-chartjs-2": "^4.0.1",
+    "react-credit-card-input": "^1.1.5",
+    "react-credit-cards": "^0.8.3",
+    "react-currency-formatter": "^1.1.0",
+    "react-dom": "^17.0.2",
+    "react-icons": "^4.3.1",
+    "react-moment": "^1.1.1",
+    "react-redux": "^7.2.6",
+    "react-router-dom": "^6.0.2",
+    "react-scripts": "4.0.3",
+    "react-sidebar": "^3.0.2",
+    "react-toastify": "^8.2.0",
+    "react-year-picker": "^0.3.7",
+    "redux": "^4.1.2",
+    "redux-devtools-extension": "^2.13.9",
+    "sass": "^1.49.9",
+    "styled-components": "^5.3.3",
+    "use-react-router-breadcrumbs": "^3.1.0",
+    "validator": "^13.7.0",
+    "web-vitals": "^1.1.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/bootstrap": "^5.1.6"
+  }
+}

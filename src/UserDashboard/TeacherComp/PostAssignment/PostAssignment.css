@@ -1,0 +1,27 @@
+.a_select-button {
+  margin-top: 1.7rem;
+}
+
+.align_center {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: white !important;
+}
+
+.svg_white {
+  filter: invert(100);
+}
+
+.assign_card {
+  display: flex;
+  justify-content: space-between;
+}
+
+.assign_card > .btn {
+  width: 20%;
+}
+
+.pad_assign {
+  width: 30%;
+}

@@ -1,0 +1,38 @@
+
+.mb-5 {
+    display: flex;
+}
+.btnsb {
+    margin-top: 15px;
+}
+.btnrst {
+    margin-top: 15px;
+    margin-left: 20px;
+}
+
+.rig_align {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.righ_date {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: flex-start;
+    width: 20%;
+}
+
+.badge_ed {
+    width: auto !important;
+    font-size: large !important;
+}
+
+.part_inline {
+    display: flex;
+}
+
+.inline_part {
+    width: 80%;
+}

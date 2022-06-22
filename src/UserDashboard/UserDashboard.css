@@ -1,0 +1,153 @@
+.body-div {
+  display: flex;
+}
+
+.card-body {
+  min-height: 30rem !important;
+}
+
+.dash-info {
+  display: flex;
+  flex-direction: column;
+  background-color: #ecf0f5;
+  width: 100%;
+  margin-top: 140px;
+  padding: 25px;
+}
+
+.dash-cont {
+  display: flex;
+  flex-direction: column;
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  color: #373a3c !important;
+  font-weight: 400;
+  position: relative;
+  height: 100vh;
+}
+
+.left-header {
+  display: flex;
+  height: 50px;
+  width: 16rem;
+  align-items: center;
+  justify-content: space-between;
+  color: white !important;
+}
+
+.top-left-head {
+  display: flex;
+  padding: 0 25px;
+  width: 100%;
+}
+
+.head-cont {
+  display: flex;
+  background: transparent;
+}
+
+.b-brand {
+  color: white !important;
+  text-decoration: none !important;
+  font-size: 20px !important;
+  font-weight: 500;
+}
+
+.mob-toggler {
+  display: flex;
+  color: white !important;
+  width: 30px !important;
+  height: 30px !important;
+  justify-content: center;
+  align-items: center;
+}
+
+.right-header {
+  display: flex;
+  width: 100%;
+  justify-content: right;
+  padding: 5px 10px;
+  align-items: center;
+}
+
+.notify-ico {
+  margin: 0 10px;
+  color: white;
+  font-size: 20px !important;
+}
+
+.person-ico {
+  margin: 0 10px;
+  color: white;
+  font-size: 20px !important;
+}
+
+
+
+.fc-col-header {
+  width: 100% !important;
+}
+
+.fc-scrollgrid-sync-table {
+  width: 100% !important;
+}
+
+.fc .fc-daygrid-body {
+  width: 100% !important;
+}
+
+.apexcharts-canvas {
+  width: 100% !important;
+}
+
+.apexcharts-svg {
+  width: 100% !important;
+}
+
+.right_head_popup {
+  display: none;
+}
+
+@media only screen and (max-width: 1054px) {
+}
+
+@media only screen and (max-width: 950px) {
+  .right-header {
+    display: none;
+  }
+
+  .top-left-head {
+    width: 100%;
+  }
+
+  .right_head_popup {
+    display: block;
+    order: 3;
+  }
+
+  .left-header {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .b-brand {
+    order: 2;
+  }
+
+  .mob-toggler {
+    order: 1;
+  }
+}
+
+@media only screen and (max-width: 740px) {
+  .sch_summary {
+    display: grid;
+    grid-template-columns: 100%;
+  }
+
+  .bar_chart {
+    width: 100%;
+  }
+
+ 
+}

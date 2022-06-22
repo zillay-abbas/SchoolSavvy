@@ -1,0 +1,17 @@
+.table-lable{
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 2rem;
+    margin-bottom: 0;
+    
+}
+.teacher-name{
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: underline;
+}
+.a_LinkHeight{
+    height: 25px;
+    padding: 0 5px !important;
+    margin: 0 10px;
+}

@@ -1,0 +1,8 @@
+.center_icon {
+    margin-top: -3px !important;
+}
+
+.space_btw {
+    display: flex;
+    justify-content: space-between;
+}

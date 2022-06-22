@@ -1,0 +1,139 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+.gg_h11
+{
+  text-align: center;
+  padding-top: 3ch;
+}
+.gg_text1
+{
+  padding-bottom: 3ch;
+  size: 10px;
+  text-align: center;
+}
+.gg_box
+{
+  margin: auto;
+  width: 50%;
+  border-radius: 4px;
+  align-self: center;
+  display: flex;
+  align-items: center;
+}
+.gg_box .gg_img
+{
+    width: 300px;
+    align-items: center;
+    padding-left: 10px;
+}
+.gg_box .gg_img img
+{
+    max-width: 100%;
+    align-items: center;
+    margin-left: 200px;
+}
+.gg_box .gg_pp{
+  padding-left: 20px;
+  padding-top: 10px;
+}
+.gg_Head22{
+  padding: 30px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.1);
+  font-family: 'Poppins', sans-serif;
+}
+.gg_Head2{
+  color:rgb(0, 140, 255);
+}
+.gg_pp2{
+  font-weight: 800;
+}
+@media (max-width: 768px){
+  .gg_box{
+    display: block;
+  }
+  .gg_img{
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  .gg_pp{
+    width: 100%;
+  }
+  .gg_h11
+  {
+    font-size: larger;
+  }
+  .gg_Head22{
+    width: 100%;
+    font-size: larger;
+  }
+  .gg_pp22{
+    width: 100%;
+    font-size: small;
+  }
+  .gg_img img{
+    width: 100%;
+    height: auto;
+  }
+}
+.gg_packg
+{
+    text-align: left;
+    padding: 2%;
+}
+.gg_wrap{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em; 
+}
+.gg_a_card {
+  flex: 1 0 200px; 
+  overflow: hidden;
+  border-radius: var(--radius);
+  margin: 50px;
+  text-align: left;
+  flex-direction: column;
+  align-self: normal;
+  width: 40ch;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: transform 200ms ease-in;
+}
+@media (max-widt:225px) {
+  .gg_h11{
+    font-size: 10px;
+  }
+  .gg_price{
+    font-size: 5px;
+  }
+}
+
+/* .form-header {
+  margin: 0 0 0px;
+}
+.form-header h1 {
+  padding: 4px 0;
+  color: #4285f4;
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.form-group button {
+  outline: none;
+  background: #4285f4;
+  width: 100%;
+  border: 0;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 1ch;
+  margin-left: 1ch;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 500;
+  line-height: inherit;
+  text-transform: uppercase;
+  cursor: pointer;
+} */
